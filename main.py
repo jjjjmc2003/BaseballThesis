@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import requests
 import matplotlib.pyplot as plt
-from baseball_pages import dashboard, thesis_overview, video, insights, hitting_evolution
+from baseball_pages import dashboard, thesis_overview, video, insights, hitting_evolution, players
 
 # Streamlit Sidebar Navigation
 st.sidebar.title("Navigation")
@@ -11,6 +11,7 @@ page = st.sidebar.radio("Go to", [
     "Dashboard",
     #"Thesis Overview",
     "YouTube Video",
+    "Players",
     #"Insights",
     "Hitting Evolution Analysis",
     "Hitting Trends Analysis"
@@ -28,6 +29,9 @@ if page == "Dashboard":
 elif page == "YouTube Video":
     video.show()
 
+elif page == "Players":
+    players.show();
+
 # If Insights selected
 #elif page == "Insights":
 #    insights.show()
@@ -37,7 +41,6 @@ elif page == "Hitting Evolution Analysis":
 elif page == "Hitting Trends Analysis":
     # Streamlit Title
     st.title("Hitting Trends (1950-2010)")
-
 
     # Set up local data directory
     DATA_DIR = "data"
