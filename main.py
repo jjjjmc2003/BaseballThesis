@@ -25,8 +25,8 @@ elif page == "Hitting Trends Analysis":
     @st.cache_data
     def load_data():
         decades = ["1950", "1960", "1970", "1980", "1990", "2000", "2010"]
-        base_path = "C:/Users/j.mcintosh25/Documents/BaseballThesis/"
-        files = [f"{base_path}{decade}stats.csv" for decade in decades]
+        base_path = "https://raw.githubusercontent.com/jjjmc2003/BaseballThesis/main/data/"
+        files = [f"{base_path}{decade}stats - Copy.csv" for decade in decades]
         data = {}
         for decade, file in zip(decades, files):
             try:
