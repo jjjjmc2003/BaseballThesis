@@ -20,27 +20,29 @@ elif page == "Insights":
 elif page == "Hitting Trends Analysis":
     st.title("Hitting Trends Analysis (1950-2010)")
 
-
     # Load datasets
     @st.cache_data
     def load_data():
         decades = ["1950", "1960", "1970", "1980", "1990", "2000", "2010"]
-        base_path = "https://raw.githubusercontent.com/jjjmc2003/BaseballThesis/data/"
-        files = [f"{base_path}{decade}stats.csv" for decade in decades]
+        base_path = "https://raw.githubusercontent.com/jjjmc2003/BaseballThesis/main/data/"
+        files = {decade: f"{base_path}{decade}stats.csv" for decade in decades}
         data = {}
-        for decade, file in zip(decades, files):
+
+        for decade, url in files.items():
             try:
-                df = pd.read_csv(file, encoding='ISO-8859-1')
-                df.columns = df.columns.str.replace("ï»¿", "").str.strip()  # Clean column names
+                df = pd.read_csv(url, encoding='ISO-8859-1')
+
+                # Ensure no hidden characters in column names
+                df.columns = df.columns.str.replace("ï»¿", "").str.strip()
+
                 data[decade] = df
             except Exception as e:
-                st.warning(f"Error loading {file}: {e}")
+                st.warning(f"❌ Error loading {url}: {e}")
                 data[decade] = pd.DataFrame()
+
         return data
 
-
     data = load_data()
-
 
     # Process data
     def process_data(data):
@@ -51,43 +53,54 @@ elif page == "Hitting Trends Analysis":
         avg_BB = {}
 
         for decade, df in data.items():
+            if df.empty:
+                st.warning(f"⚠️ Skipping {decade} due to missing data.")
+                continue
+
             df.columns = df.columns.str.strip()
             missing_cols = [col for col in key_stats if col not in df.columns]
             if missing_cols:
-                st.warning(f"Warning: Missing columns in {decade}: {missing_cols}")
+                st.warning(f"⚠️ Missing columns in {decade}: {missing_cols}")
                 continue
 
             df = df[key_stats].copy()
             df.rename(columns={"SO": "K"}, inplace=True)
 
+            # Prevent division errors & NaN values
             df["HR/PA"] = df["HR"] / df["PA"]
             df["K%"] = df["K"] / df["PA"]
             df["BB%"] = df["BB"] / df["PA"]
-            processed_avg[decade] = df.mean()
+
+            processed_avg[decade] = df.mean().fillna(0)  # Ensure no NaN values
 
             avg_HR[decade] = df["HR"].mean()
             avg_K[decade] = df["K"].mean()
             avg_BB[decade] = df["BB"].mean()
 
-        return pd.DataFrame(processed_avg), pd.Series(avg_HR, name="Avg HR per Player"), pd.Series(avg_K,
-                                                                                                   name="Avg K per Player"), pd.Series(
-            avg_BB, name="Avg BB per Player")
-
+        return (
+            pd.DataFrame(processed_avg),
+            pd.Series(avg_HR, name="Avg HR per Player"),
+            pd.Series(avg_K, name="Avg K per Player"),
+            pd.Series(avg_BB, name="Avg BB per Player"),
+        )
 
     summary_stats_avg, avg_HR, avg_K, avg_BB = process_data(data)
 
     # Sidebar plot selection
     plot_option = st.sidebar.selectbox(
         "Select a plot:",
-        ["Hitting Trends - Averages", "Average HRs per Player", "Average Strikeouts per Player",
-         "Average Walks per Player"]
+        [
+            "Hitting Trends - Averages",
+            "Average HRs per Player",
+            "Average Strikeouts per Player",
+            "Average Walks per Player",
+        ],
     )
-
 
     # Plot function
     def plot_trends(summary_stats, title):
         if summary_stats.empty:
-            st.warning("No valid data to plot.")
+            st.warning("⚠️ No valid data to plot.")
             return
 
         summary_stats = summary_stats.T
@@ -96,7 +109,7 @@ elif page == "Hitting Trends Analysis":
         fig, ax = plt.subplots(figsize=(10, 5))
         for col in ["BA", "OBP", "SLG", "HR/PA", "K%", "BB%"]:
             if col in summary_stats.columns:
-                ax.plot(summary_stats.index, summary_stats[col], marker='o', label=col)
+                ax.plot(summary_stats.index, summary_stats[col], marker="o", label=col)
 
         ax.set_xlabel("Decade")
         ax.set_ylabel("Metric Value")
@@ -106,12 +119,15 @@ elif page == "Hitting Trends Analysis":
 
         st.pyplot(fig)
 
-
     # Plot per-player averages
     def plot_avg_totals(avg_series, title, ylabel):
+        if avg_series.empty:
+            st.warning(f"⚠️ No data available for {title}.")
+            return
+
         fig, ax = plt.subplots(figsize=(10, 5))
         avg_series.index = avg_series.index.astype(int)
-        ax.plot(avg_series.index, avg_series.values, marker='o', linestyle='-', label=title)
+        ax.plot(avg_series.index, avg_series.values, marker="o", linestyle="-", label=title)
 
         ax.set_xlabel("Decade")
         ax.set_ylabel(ylabel)
@@ -120,7 +136,6 @@ elif page == "Hitting Trends Analysis":
         ax.grid()
 
         st.pyplot(fig)
-
 
     # Display selected plot
     if plot_option == "Hitting Trends - Averages":
