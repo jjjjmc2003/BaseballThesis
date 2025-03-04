@@ -8,8 +8,9 @@ def show():
     st.markdown("## Project Overview")
     st.write(
         "This project explores how Major League Baseball (MLB) hitting has evolved from **1950 to the present day**. "
-        "We aim to uncover the driving forces behind these changes and analyze trends in **power hitting vs. contact hitting**, "
-        "as well as how rising pitch velocities and training advancements have influenced hitter success."
+        "We aim to uncover the driving forces behind these changes and analyze trends in other aspects of hitting such as"
+        " **power hitting vs. contact hitting** "
+
     )
 
     # Project Goal Section

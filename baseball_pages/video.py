@@ -6,18 +6,10 @@ def show():
 
 # Brief description
     st.write(
-      "This project explores how baseball statistics have evolved over time, analyzing power hitters, contact hitters, and the impact of increasing pitch velocities using machine learning techniques."
+      "In this video the different TSNEs of hitters is displayed, the general idea of this section is to display"
+      "just how different the decades are from each other, some share similarities while others do not resemble"
+      "the other in the slightest "
     )
 
     # Embed YouTube video
     st.video("https://youtu.be/QTlPt20pQaU")
-    # Additional content
-    st.write("If you're interested in the data science behind baseball analytics, check out my full research below!")
-
-    st.markdown("### Key Insights")
-    st.write("- Analyzing historical MLB data to classify hitters into power vs. contact roles")
-    st.write("- Clustering MLB hitters by playing era (1950-present) using machine learning")
-    st.write("- Investigating the relationship between pitch velocity and hitter success")
-
-    st.markdown("#### **Want to learn more?**")
-    st.write("Feel free to reach out or check my other work!")

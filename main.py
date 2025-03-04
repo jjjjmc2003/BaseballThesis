@@ -3,15 +3,16 @@ import pandas as pd
 import os
 import requests
 import matplotlib.pyplot as plt
-from baseball_pages import dashboard, thesis_overview, video, insights
+from baseball_pages import dashboard, thesis_overview, video, insights, hitting_evolution
 
 # Streamlit Sidebar Navigation
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", [
     "Dashboard",
-    "Thesis Overview",
+    #"Thesis Overview",
     "YouTube Video",
-    "Insights",
+    #"Insights",
+    "Hitting Evolution Analysis",
     "Hitting Trends Analysis"
 ])
 
@@ -20,21 +21,23 @@ if page == "Dashboard":
     dashboard.show()
 
 # If Thesis Overview selected
-elif page == "Thesis Overview":
-    thesis_overview.show()
+#elif page == "Thesis Overview":
+ #   thesis_overview.show()
 
 # If YouTube Video selected
 elif page == "YouTube Video":
     video.show()
 
 # If Insights selected
-elif page == "Insights":
-    insights.show()
-
+#elif page == "Insights":
+#    insights.show()
+elif page == "Hitting Evolution Analysis":
+    hitting_evolution.show()
 # If Hitting Trends Analysis selected
 elif page == "Hitting Trends Analysis":
     # Streamlit Title
-    st.title("Hitting Trends Analysis (1950-2010)")
+    st.title("Hitting Trends (1950-2010)")
+
 
     # Set up local data directory
     DATA_DIR = "data"
@@ -56,7 +59,7 @@ elif page == "Hitting Trends Analysis":
                 if response.status_code == 200:
                     with open(local_path, "wb") as f:
                         f.write(response.content)
-                    st.success(f"✅ Downloaded: {file_name}")
+                    st.success(f" Downloaded: {file_name}")
                 else:
                     st.error(f"❌ Error downloading {file_name} (HTTP {response.status_code})")
             except Exception as e:
@@ -84,7 +87,7 @@ elif page == "Hitting Trends Analysis":
 
     # Show confirmation message
     if data:
-        st.write("✅ Successfully loaded all available data!")
+        st.write("Successfully loaded all available data!")
 
     # Process Data
     def process_data(data):
@@ -98,7 +101,7 @@ elif page == "Hitting Trends Analysis":
             df.columns = df.columns.str.strip()
             missing_cols = [col for col in key_stats if col not in df.columns]
             if missing_cols:
-                st.warning(f"⚠️ Warning: Missing columns in {decade}: {missing_cols}")
+                st.warning(f"Warning: Missing columns in {decade}: {missing_cols}")
                 continue
 
             df = df[key_stats].copy()
@@ -129,7 +132,7 @@ elif page == "Hitting Trends Analysis":
     # Function to Plot Trends
     def plot_trends(summary_stats, title):
         if summary_stats.empty:
-            st.warning("⚠️ No valid data to plot.")
+            st.warning(" No valid data to plot.")
             return
 
         summary_stats = summary_stats.T
