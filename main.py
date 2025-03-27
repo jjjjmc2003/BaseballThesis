@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import requests
 import matplotlib.pyplot as plt
-from baseball_pages import dashboard, thesis_overview, video, insights, hitting_evolution, players
+from baseball_pages import dashboard, thesis_overview, video, insights, hitting_evolution, players, chatbot
 
 # Streamlit Sidebar Navigation
 st.sidebar.title("Navigation")
@@ -14,7 +14,8 @@ page = st.sidebar.radio("Go to", [
     "Players",
     #"Insights",
     "Hitting Evolution Analysis",
-    "Hitting Trends Analysis"
+    "Hitting Trends Analysis",
+    "Chatbot"
 ])
 
 # If Dashboard selected
@@ -177,3 +178,6 @@ elif page == "Hitting Trends Analysis":
         plot_avg_totals(avg_K, "Average Strikeouts Per Player Per Decade", "Avg Strikeouts per Player")
     elif plot_option == "Average Walks per Player":
         plot_avg_totals(avg_BB, "Average Walks Per Player Per Decade", "Avg Walks per Player")
+
+elif page == "Chatbot":
+    chatbot.show()
