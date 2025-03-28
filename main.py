@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import requests
 import matplotlib.pyplot as plt
-from baseball_pages import dashboard, thesis_overview, video, insights, hitting_evolution, players, chatbot, yearly_analysis
+from baseball_pages import dashboard, thesis_overview, video, hitting_evolution, players, chatbot, yearly_analysis
 
 # Streamlit Sidebar Navigation
 st.sidebar.title("Navigation")
