@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import requests
 import matplotlib.pyplot as plt
-from baseball_pages import dashboard, thesis_overview, video, insights, hitting_evolution, players, chatbot
+from baseball_pages import dashboard, thesis_overview, video, insights, hitting_evolution, players, chatbot, yearly_analysis
 
 # Streamlit Sidebar Navigation
 st.sidebar.title("Navigation")
@@ -15,7 +15,8 @@ page = st.sidebar.radio("Go to", [
     #"Insights",
     "Hitting Evolution Analysis",
     "Hitting Trends Analysis",
-    "Chatbot"
+    "Chatbot",
+    "Year-by-Year Analysis"
 ])
 
 # If Dashboard selected
@@ -181,3 +182,7 @@ elif page == "Hitting Trends Analysis":
 
 elif page == "Chatbot":
     chatbot.show()
+
+elif page == "Year-by-Year Analysis":
+    yearly_analysis.show()
+
