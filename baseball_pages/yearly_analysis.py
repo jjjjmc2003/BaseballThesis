@@ -24,10 +24,12 @@ def show():
         st.error("🚫 Data file not found. Please check your file paths or run the combiner script.")
         return
 
-    metric = st.selectbox("Select a metric to visualize:", options=["HR", "SO", "BB", "BA", "OBP", "SLG", "PA"])
+    metric = st.selectbox("Select a metric to visualize:", options=["HR", "SO", "BB", "BA", "OBP", "SLG", "K%", "BB%", "HR/PA"])
 
     # Calculate average by year
     agg_df = df.groupby("Year")[metric].mean().reset_index()
+    agg_df["Year"] = agg_df["Year"].astype(int)  # Ensure it's int
+    agg_df["Year"] = agg_df["Year"].apply(lambda x: str(x))  # Force string, removes comma
 
     # Plot with Plotly
     fig = px.line(
