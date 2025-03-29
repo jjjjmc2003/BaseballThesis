@@ -9,8 +9,8 @@ venv/
 __pycache__/
 *.pyc
 
-# Ignore CSV exports (optional)
+# Ignore CSV exports 
 *.csv
 
-# Ignore Jupyter/IPython stuff (optional)
+# Ignore Jupyter/IPython stuff
 .ipynb_checkpoints/
