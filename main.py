@@ -28,10 +28,10 @@ if page == "Dashboard":
  #   thesis_overview.show()
 
 # If YouTube Video selected
-elif page == "YouTube Video":
+elif page == "Decade TSNE":
     video.show()
 
-elif page == "Players":
+elif page == "Players (Contact vs Power)":
     players.show();
 
 # If Insights selected
