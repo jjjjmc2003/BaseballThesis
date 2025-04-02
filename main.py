@@ -10,8 +10,8 @@ st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", [
     "Dashboard",
     #"Thesis Overview",
-    "YouTube Video",
-    "Players",
+    "Decade TSNE",
+    "Players (Contact vs Power)",
     #"Insights",
     "Hitting Evolution Analysis",
     "Hitting Trends Analysis",
@@ -94,8 +94,12 @@ elif page == "Hitting Trends Analysis":
     if data:
         st.write("Successfully loaded all available data!")
 
-    # Process Data
-    def process_data(data):
+    # ⬅️ Add this near the top of the file after loading data
+    player_type = st.radio("Choose dataset:", ["All Players", "Starters Only (PA ≥ 100)"])
+
+
+    # ✅ Modified function with player_type input
+    def process_data(data, player_type):
         key_stats = ["BA", "OBP", "SLG", "HR", "SO", "BB", "PA"]
         processed_avg = {}
         avg_HR = {}
@@ -110,6 +114,9 @@ elif page == "Hitting Trends Analysis":
                 continue
 
             df = df[key_stats].copy()
+            if player_type == "Starters Only (PA ≥ 100)":
+                df = df[df["PA"] >= 100]
+
             df.rename(columns={"SO": "K"}, inplace=True)
 
             df["HR/PA"] = df["HR"] / df["PA"]
@@ -125,7 +132,9 @@ elif page == "Hitting Trends Analysis":
                                                                                                    name="Avg K per Player"), pd.Series(
             avg_BB, name="Avg BB per Player")
 
-    summary_stats_avg, avg_HR, avg_K, avg_BB = process_data(data)
+
+    # 🔁 Recompute based on selection
+    summary_stats_avg, avg_HR, avg_K, avg_BB = process_data(data, player_type)
 
     # Sidebar Navigation for Plot Selection
     plot_option = st.sidebar.selectbox(

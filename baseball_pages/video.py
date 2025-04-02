@@ -3,7 +3,7 @@ import streamlit as st
 
 # Page title
 def show():
-    st.title("My Thesis on Baseball Stats & Machine Learning")
+    st.title("Decade TSNE Plots (1950-2010)")
 
     # Brief description
     st.write(
