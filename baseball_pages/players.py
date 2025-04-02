@@ -9,7 +9,7 @@ from sklearn.preprocessing import StandardScaler
 import seaborn as sns
 
 def show():
-    st.title("Hitter Clustering & Trends (Power vs Contact)")
+    st.title("Players (Power vs Contact)")
 
     # Set up local data directory
     DATA_DIR = "data"
