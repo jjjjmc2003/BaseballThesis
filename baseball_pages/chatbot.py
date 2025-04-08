@@ -53,7 +53,7 @@ def show():
         year_matches = re.findall(r"\b(19[5-9][0-9]|200[0-9]|2010)\b", question)
         if year_matches:
             year = int(year_matches[0])
-            context_df = context_df[context_df["year"] == year]
+            context_df = context_df[context_df["Year"] == year]
 
         # Sample a few top hitters by BA or H (limit to avoid overloading tokens)
         sample_cols = ["Name", "year", "BA", "AB", "H", "HR", "SLG"]  # Adjust to match your columns
