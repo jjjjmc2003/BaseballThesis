@@ -32,44 +32,15 @@ def show():
 
 
     # Load Historical Data
-
-    # Load Historical Data
-
-    decades = [f"data/{decade}stats.csv" for decade in range(1950, 2010, 10)]
     combined_all = "data/combined_yearly_stats_all_players.csv"
-    combined_starters = "data/combined_yearly_stats_starters_only.csv"
 
-    existing_decade_files = [f for f in decades if os.path.exists(f)]
-    has_combined_all = os.path.exists(combined_all)
-    has_combined_starters = os.path.exists(combined_starters)
-
-    if not existing_decade_files and not (has_combined_all or has_combined_starters):
-        st.warning("⚠️ No data files found in the 'data/' folder.")
+    if not os.path.exists(combined_all):
+        st.warning("⚠️ combined_yearly_stats_all_players.csv not found in the 'data/' folder.")
         return
 
-    # Data selection options
-    st.markdown("### 📂 Select the dataset to query:")
-    data_option = st.selectbox(
-        "Choose your dataset",
-        options=[
-            "All Players (Combined)",
-            "Starters Only (Combined)",
-            "All Decades (1950–2010)"
-        ]
-    )
-
-    # Load selected DataFrame
     try:
-        if data_option == "All Players (Combined)" and has_combined_all:
-            df = pd.read_csv(combined_all, encoding="ISO-8859-1")
-        elif data_option == "Starters Only (Combined)" and has_combined_starters:
-            df = pd.read_csv(combined_starters, encoding="ISO-8859-1")
-        elif data_option == "All Decades (1950–2010)":
-            df = pd.concat([pd.read_csv(file, encoding="ISO-8859-1") for file in existing_decade_files],
-                           ignore_index=True)
-        else:
-            st.error("Selected dataset file not found.")
-            return
+        df = pd.read_csv(combined_all, encoding="ISO-8859-1")
+        st.info("📊 Loaded dataset: All MLB players from 1950–2010.")
     except Exception as e:
         st.error(f"❌ Error loading data: {e}")
         return
@@ -77,16 +48,31 @@ def show():
     # Prompt Generator
 
     def generate_prompt(question, context_df):
-        stats_summary = context_df.describe(include='all').to_string()
-        prompt = f"""You are a baseball analyst bot trained on MLB data from 1950 to 2010. 
-Use the following data summary to answer this question: {question}
+        # Try to extract year if it's mentioned in the question
+        import re
+        year_matches = re.findall(r"\b(19[5-9][0-9]|200[0-9]|2010)\b", question)
+        if year_matches:
+            year = int(year_matches[0])
+            context_df = context_df[context_df["year"] == year]
 
-DATA SUMMARY:
-{stats_summary}
+        # Sample a few top hitters by BA or H (limit to avoid overloading tokens)
+        sample_cols = ["Name", "year", "BA", "AB", "H", "HR", "SLG"]  # Adjust to match your columns
+        if "BA" in context_df.columns:
+            context_df = context_df.sort_values(by="BA", ascending=False).head(10)
 
-Answer:"""
+        sample_data = context_df[sample_cols].to_string(index=False)
+
+        prompt = f"""You are a baseball analyst bot trained on MLB player data from 1950-2010. Use the data below to answer this question:
+
+    QUESTION:
+    {question}
+
+    DATA:
+    {sample_data}
+
+    Answer:"""
+
         return prompt
-
 
     #Chat History
 
