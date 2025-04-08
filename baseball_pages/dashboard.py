@@ -20,16 +20,6 @@ def show():
         "factors that may have driven those shifts. This includes investigating changes in performance, injury risk, and strategic approaches."
     )
 
-    st.markdown(
-        """
-        ### Key Questions:
-        - **Have power hitters become more dominant while contact hitters have declined?**
-        - **Do modern hitters focus more on exit velocity and launch angle than batting average?**
-        - **Is there a correlation between rising fastball velocity and changes in offensive outcomes—or injury rates?**
-        - **What role has sports science and analytics played in reshaping hitter development and success?**
-        """
-    )
-
     # Methodology Section
     st.markdown("## ⚙️ Methodology")
     st.write(
