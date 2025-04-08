@@ -21,6 +21,8 @@ def show():
 
     st.markdown("### 💬 Welcome to the **Baseball Stats Chatbot**")
     st.write("Ask anything about MLB hitters from **1950 to 2010** 📊⚾")
+    st.caption('Note to prompt the Chatbot to answer a question using outside knowledge (not just statistical data)'
+               ' of dataset type "Using information outside of the dataset" then type your question')
 
 
     # Chat History
