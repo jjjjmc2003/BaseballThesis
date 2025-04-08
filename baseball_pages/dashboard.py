@@ -29,8 +29,11 @@ def show():
     st.markdown(
         """
         - **Clustering & Dimensionality Reduction**: Using **PCA** and **TSNE** to visualize and group hitters and decades by performance metrics
+        \n
         - **Trend Analysis**: Observing decade-by-decade and yearly changes in **batting average**, **slugging percentage**, **strikeout rate**, etc
+        \n
         - **Historical and Type Comparison**: Contrasting modern hitters with those from earlier decades to identify evolving archetypes, and contact vs power hitters
+        \n
         - **Chatbot**: trained on dataset available to answer all questions baseball or completely unrelated 
         """
     )
