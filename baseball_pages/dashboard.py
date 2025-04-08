@@ -2,7 +2,7 @@ import streamlit as st
 
 def show():
     # Page Title
-    st.title("⚾MLB Hitting Evolution Dashboard⚾")
+    st.title("⚾Hitting Evolution Dashboard⚾")
 
     # Introduction Section
     st.markdown("## Project Overview")
@@ -12,16 +12,15 @@ def show():
         "hitter roles. Using a combination of **machine learning**, **dimensionality reduction**, and **trend analysis**, "
         "we compare decades of hitting data to examine whether the line between **power hitters** and **contact hitters** has blurred."
     )
-
     # Project Goal Section
-    st.markdown("## Research Goal")
+    st.markdown("## \nResearch Goal")
     st.write(
         "The central aim is to **quantify how hitter profiles and offensive trends have evolved** over time and to determine the "
         "factors that may have driven those shifts. This includes investigating changes in performance, injury risk, and strategic approaches."
     )
 
     # Methodology Section
-    st.markdown("## Features")
+    st.markdown("## \nFeatures")
     st.write(
         "To explore these questions, we analyze MLB hitting data by decade using both statistical and machine learning techniques:"
     )
@@ -39,7 +38,7 @@ def show():
     )
 
     # Call to Action
-    st.markdown("### How to Explore?")
+    st.markdown("## \nHow to Explore?")
     st.write(
         "Use the navigation menu to explore visual dashboards, watch how the TSNE's change over the years, and examine interactive analyses of how "
         "MLB hitters have evolved"
