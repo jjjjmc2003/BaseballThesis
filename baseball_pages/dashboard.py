@@ -31,7 +31,7 @@ def show():
         - **Clustering & Dimensionality Reduction**: Using **PCA** and **TSNE** to visualize and group hitters and decades by performance metrics
         - **Trend Analysis**: Observing decade-by-decade and yearly changes in **batting average**, **slugging percentage**, **strikeout rate**, etc
         - **Historical and Type Comparison**: Contrasting modern hitters with those from earlier decades to identify evolving archetypes, and contact vs power hitters
-        - **Chatbot trained on dataset available to answer all questions baseball or completely unrelated 
+        - **Chatbot**: trained on dataset available to answer all questions baseball or completely unrelated 
         """
     )
 
