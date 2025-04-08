@@ -2,7 +2,7 @@ import streamlit as st
 
 def show():
     # Page Title
-    st.title("⚾MLB Hitting Evolution Interactive Dashboard⚾")
+    st.title("⚾MLB Hitting Evolution Dashboard⚾")
 
     # Introduction Section
     st.markdown("## Project Overview")
