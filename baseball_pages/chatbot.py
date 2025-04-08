@@ -56,7 +56,7 @@ def show():
             context_df = context_df[context_df["Year"] == year]
 
         # Sample a few top hitters by BA or H (limit to avoid overloading tokens)
-        sample_cols = ["Name", "year", "BA", "AB", "H", "HR", "SLG"]  # Adjust to match your columns
+        sample_cols = ["Name", "Year", "BA", "AB", "H", "HR", "SLG"]  # Adjust to match your columns
         if "BA" in context_df.columns:
             context_df = context_df.sort_values(by="BA", ascending=False).head(10)
 
