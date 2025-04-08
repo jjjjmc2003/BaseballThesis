@@ -7,47 +7,47 @@ def show():
     # Introduction Section
     st.markdown("## Project Overview")
     st.write(
-        "This project explores how Major League Baseball (MLB) hitting has evolved from **1950 to the present day**. "
-        "We aim to uncover the driving forces behind these changes and analyze trends in other aspects of hitting such as"
-        " **power hitting vs. contact hitting** "
-
+        "This thesis investigates how Major League Baseball (MLB) hitters have changed from **1950 to the present day**, "
+        "with a focus on how advances in training, increased pitch velocity, and changes in game philosophy have influenced "
+        "hitter roles. Using a combination of **machine learning**, **dimensionality reduction**, and **trend analysis**, "
+        "we compare decades of hitting data to examine whether the line between **power hitters** and **contact hitters** has blurred."
     )
 
     # Project Goal Section
     st.markdown("## 🔍 Research Goal")
     st.write(
-        "The goal of this study is to **quantify the evolution of hitting styles in MLB** and determine the key factors responsible for these changes. "
-        "Specifically, we seek to answer:"
+        "The central aim is to **quantify how hitter profiles and offensive trends have evolved** over time and to determine the "
+        "factors that may have driven those shifts. This includes investigating changes in performance, injury risk, and strategic approaches."
     )
 
     st.markdown(
         """
-        - **How has the distribution of power hitters vs. contact hitters changed over time?**
-        - **Are modern hitters more optimized for home runs rather than batting average?**
-        - **Has the rise in average fastball velocity affected offensive production?**
-        - **What role has advanced training, analytics, and scouting played in shaping modern hitters?**
+        ### Key Questions:
+        - **Have power hitters become more dominant while contact hitters have declined?**
+        - **Do modern hitters focus more on exit velocity and launch angle than batting average?**
+        - **Is there a correlation between rising fastball velocity and changes in offensive outcomes—or injury rates?**
+        - **What role has sports science and analytics played in reshaping hitter development and success?**
         """
     )
 
     # Methodology Section
     st.markdown("## ⚙️ Methodology")
     st.write(
-        "To analyze these questions, we leverage **machine learning techniques** on MLB statistical data "
-        "from **1950 to the present day**. Our approach includes:"
+        "To explore these questions, we analyze MLB hitting data by decade using both statistical and machine learning techniques:"
     )
 
     st.markdown(
         """
-        - **Clustering Analysis**: Grouping hitters by playing style using **PCA (Principal Component Analysis)** and **K-Means Clustering**.
-        - **Trend Analysis**: Examining statistical trends in **batting average, home runs, strikeouts, and slugging percentage** over decades.
-        - **Velocity Impact Study**: Investigating how **rising pitch velocities** have affected hitters' performance.
-        - **ML Models**: Predicting how hitting metrics correlate with **historical changes in training and pitching strategy**.
+        - **Clustering & Dimensionality Reduction**: Using **PCA** and **TSNE** to visualize and group hitters by performance metrics.
+        - **Trend Analysis**: Observing decade-by-decade changes in **batting average**, **slugging percentage**, **strikeout rate**, and **home run rate**.
+        - **Velocity Correlation Study**: Linking increasing average **pitch velocities** to hitter performance and possible injury trends.
+        - **Historical Comparison**: Contrasting modern hitters with those from earlier decades to identify evolving archetypes.
         """
     )
 
     # Call to Action
     st.markdown("### 🚀 What's Next?")
     st.write(
-        "Explore the other sections of this app to dive deeper into the findings, view **visual insights**, "
-        "and watch an explanatory **YouTube video** on the research."
+        "Use the navigation menu to explore visual dashboards, watch our **explanatory video**, and examine interactive analyses of how "
+        "MLB hitters have evolved in response to the modern game’s demands."
     )
