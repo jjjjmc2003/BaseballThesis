@@ -13,14 +13,14 @@ def show():
         "we compare decades of hitting data to examine whether the line between **power hitters** and **contact hitters** has blurred."
     )
     # Project Goal Section
-    st.markdown("## \nResearch Goal")
+    st.markdown("\n## Research Goal")
     st.write(
         "The central aim is to **quantify how hitter profiles and offensive trends have evolved** over time and to determine the "
         "factors that may have driven those shifts. This includes investigating changes in performance, injury risk, and strategic approaches."
     )
 
     # Methodology Section
-    st.markdown("## \nFeatures")
+    st.markdown("\n##Features")
     st.write(
         "To explore these questions, we analyze MLB hitting data by decade using both statistical and machine learning techniques:"
     )
@@ -38,7 +38,7 @@ def show():
     )
 
     # Call to Action
-    st.markdown("## \nHow to Explore?")
+    st.markdown("\n##How to Explore?")
     st.write(
         "Use the navigation menu to explore visual dashboards, watch how the TSNE's change over the years, and examine interactive analyses of how "
         "MLB hitters have evolved"
