@@ -12,15 +12,15 @@ def show():
         "hitter roles. Using a combination of **machine learning**, **dimensionality reduction**, and **trend analysis**, "
         "we compare decades of hitting data to examine whether the line between **power hitters** and **contact hitters** has blurred."
     )
-    # Project Goal Section
-    st.markdown("\n## Research Goal")
+
+    st.markdown("## Research Goal")
     st.write(
         "The central aim is to **quantify how hitter profiles and offensive trends have evolved** over time and to determine the "
-        "factors that may have driven those shifts. This includes investigating changes in performance, injury risk, and strategic approaches."
+        "factors that may have driven those shifts. This includes investigating changes in performance, strategic approaches, and ."
     )
 
-    # Methodology Section
-    st.markdown("\n##Features")
+
+    st.markdown("## Features")
     st.write(
         "To explore these questions, we analyze MLB hitting data by decade using both statistical and machine learning techniques:"
     )
@@ -37,8 +37,8 @@ def show():
         """
     )
 
-    # Call to Action
-    st.markdown("\n##How to Explore?")
+
+    st.markdown("## How to Explore?")
     st.write(
         "Use the navigation menu to explore visual dashboards, watch how the TSNE's change over the years, and examine interactive analyses of how "
         "MLB hitters have evolved"
