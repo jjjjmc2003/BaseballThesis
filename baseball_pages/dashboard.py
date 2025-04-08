@@ -2,7 +2,7 @@ import streamlit as st
 
 def show():
     # Page Title
-    st.title("📊 MLB Hitting Evolution Analysis")
+    st.title("⚾MLB Hitting Evolution Interactive Dashboard⚾")
 
     # Introduction Section
     st.markdown("## Project Overview")
@@ -14,7 +14,7 @@ def show():
     )
 
     # Project Goal Section
-    st.markdown("## 🔍 Research Goal")
+    st.markdown("## Research Goal")
     st.write(
         "The central aim is to **quantify how hitter profiles and offensive trends have evolved** over time and to determine the "
         "factors that may have driven those shifts. This includes investigating changes in performance, injury risk, and strategic approaches."
