@@ -21,8 +21,8 @@ def show():
 
     st.markdown("### 💬 Welcome to the **Baseball Stats Chatbot**")
     st.write("Ask anything about MLB hitters from **1950 to 2010** 📊⚾")
-    st.caption('Note to prompt the Chatbot to answer a question using outside knowledge (not just statistical data)'
-               ' of dataset type "Using information outside of the dataset" then type your question')
+    st.caption("Note to ask about anything non baseball related or not related to the dataset prompt it using"
+               '"Using Knowledge Outside of the Dataset" will help it respond more accurately')
 
 
     # Chat History
@@ -33,46 +33,20 @@ def show():
 
     # Load Historical Data
 
-    # Load Historical Data
-
     decades = [f"data/{decade}stats.csv" for decade in range(1950, 2010, 10)]
-    combined_all = "data/combined_yearly_stats_all_players.csv"
-    combined_starters = "data/combined_yearly_stats_starters_only.csv"
+    existing_files = [f for f in decades if os.path.exists(f)]
 
-    existing_decade_files = [f for f in decades if os.path.exists(f)]
-    has_combined_all = os.path.exists(combined_all)
-    has_combined_starters = os.path.exists(combined_starters)
-
-    if not existing_decade_files and not (has_combined_all or has_combined_starters):
+    if not existing_files:
         st.warning("⚠️ No data files found in the 'data/' folder.")
         return
 
-    # Data selection options
-    st.markdown("### 📂 Select the dataset to query:")
-    data_option = st.selectbox(
-        "Choose your dataset",
-        options=[
-            "All Players (Combined)",
-            "Starters Only (Combined)",
-            "All Decades (1950–2010)"
-        ]
-    )
-
-    # Load selected DataFrame
     try:
-        if data_option == "All Players (Combined)" and has_combined_all:
-            df = pd.read_csv(combined_all, encoding="ISO-8859-1")
-        elif data_option == "Starters Only (Combined)" and has_combined_starters:
-            df = pd.read_csv(combined_starters, encoding="ISO-8859-1")
-        elif data_option == "All Decades (1950–2010)":
-            df = pd.concat([pd.read_csv(file, encoding="ISO-8859-1") for file in existing_decade_files],
-                           ignore_index=True)
-        else:
-            st.error("Selected dataset file not found.")
-            return
+        # Use ISO-8859-1 in case of weird characters
+        df = pd.concat([pd.read_csv(file, encoding="ISO-8859-1") for file in existing_files], ignore_index=True)
     except Exception as e:
         st.error(f"❌ Error loading data: {e}")
         return
+
 
     # Prompt Generator
 
