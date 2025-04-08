@@ -22,7 +22,7 @@ def show():
     st.markdown("### 💬 Welcome to the **Baseball Stats Chatbot**")
     st.write("Ask anything about MLB hitters from **1950 to 2010** 📊⚾")
     st.write("**Note**: to ask about anything non baseball related or not related to the dataset prompt it using"
-               '"Using Knowledge Outside of the Dataset" will help it respond more accurately')
+               '\n"Using Knowledge Outside of the Dataset" will help it respond more accurately')
 
 
     # Chat History
