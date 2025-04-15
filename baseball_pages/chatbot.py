@@ -95,7 +95,7 @@ Answer:"""
             # Generate prompt with stats summary
             # Use GPT's general knowledge if user prompts it
             if "using knowledge outside of the dataset" in user_question.lower():
-                prompt = f"""You are a knowledgeable assistant. Please answer the following question using general knowledge and reasoning beyond any specific dataset:
+                prompt = f"""You are a knowledgeable baseball chatbot. Please answer the following question using general baseball knowledge and reasoning beyond any specific dataset:
 
             {user_question}
 
