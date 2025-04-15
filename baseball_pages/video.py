@@ -64,3 +64,5 @@ def show():
         "hitters are no longer generalized but fit specific statistical molds. This reflects a baseball world "
         "heavily shaped by analytics and optimized player development, where every hitter has a clearly defined purpose in a lineup."
     )
+
+
