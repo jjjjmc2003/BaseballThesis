@@ -11,8 +11,8 @@ import seaborn as sns
 def show():
     st.title("Players (Power vs Contact)")
 
-    st.write("Note on the Player Names: * - bats left-handed"
-             "                          # - bats  (switch hitter)"
+    st.write("Note on the Player Names: * - bats left-handed\n"
+             "                          # - bats  (switch hitter)\n"
              "                          nothing - bats right,"
                " ? - unknown")
 
