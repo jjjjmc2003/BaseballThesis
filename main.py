@@ -13,7 +13,7 @@ page = st.sidebar.radio("Go to", [
     "Players (Contact vs Power)",
     "Analysis of Hitting Evolution",
     "Decade Hitting Trends Analysis",
-    "Year by Year Hitting Trend Analysis",
+    "Year by Year Hitting Analysis",
     "Chatbot",
 
 ])
