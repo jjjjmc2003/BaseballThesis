@@ -184,6 +184,6 @@ elif page == "Decade Hitting Trends Analysis":
 elif page == "Chatbot":
     chatbot.show()
 
-elif page == "Year by Year Hitting Trend Analysis":
+elif page == "Year by Year Hitting Analysis":
     yearly_analysis.show()
 
