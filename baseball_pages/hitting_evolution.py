@@ -105,8 +105,8 @@ def show():
         ax.scatter(pca_df["PC1"], pca_df["PC2"], color="blue")
         for i, txt in enumerate(pca_df.index):
             ax.annotate(txt, (pca_df["PC1"][i], pca_df["PC2"][i]))
-        ax.set_xlabel("Principal Component 1")
-        ax.set_ylabel("Principal Component 2")
+        ax.set_xlabel("Principal Component 1 (Contact Component)")
+        ax.set_ylabel("Principal Component 2 (Power Component)")
         ax.set_title("PCA Analysis of Hitting Trends")
         st.pyplot(fig)
 
@@ -129,39 +129,48 @@ def show():
 
     # Interpretation of Data
     st.title("Interpretation of Data: ")
-    st.write("1950 is far from modern eras, suggesting hitting styles were very different back then. \n"
-             "\n1960-1970 are close together, implying minimal changes in that period.\n\n1980 starts shifting,"
-             " possibly reflecting an increase in power hitting.\n\n2000 is farthest apart, which may be due to "
-             "the steroid era, where power numbers surged.\n\n2010 moves back toward 1990, "
-             "indicating a post-steroid era adjustment in hitting trends.")
+
+    st.write(
+        "1950 appears isolated from the modern eras, indicating a significantly different offensive profile. "
+        "Its position suggests low contact and low power metrics, likely reflective of a more balanced or conservative hitting era.\n\n"
+        "1960 and 1970 are clustered together, indicating stability in offensive strategies, with a slight increase in contact metrics.\n\n"
+        "By 1980, we begin to see a noticeable shift toward higher power metrics and lower contact efficiency, "
+        "marking the early transition to modern hitting approaches.\n\n"
+        "2000 stands out the most, moving farthest left along PC1 and highest along PC2, consistent with the steroid era's focus on extreme power "
+        "— high home run rates, strikeouts, and slugging.\n\n"
+        "2010 shifts back toward the center, closer to 1990, suggesting a partial recalibration away from peak power, "
+        "possibly due to improved testing and a renewed emphasis on balanced hitting."
+    )
 
     st.write("### **Principal Component Analysis (PCA) Findings:**")
     st.markdown("### **Interpreting Principal Components (PC1 & PC2)**")
 
-    st.write("- **PC1 represents the shift from contact hitting to power-hitting.**")
-    st.write("  - Higher PC1 values indicate more **home runs and strikeouts** (modern power approach).")
+    st.write("- **PC1 represents the axis from power hitting to contact hitting.**")
     st.write(
-        "  - Lower PC1 values reflect **high batting averages, more walks, and fewer strikeouts** (traditional contact hitting).")
+        "  - **Higher PC1 values** reflect **high batting averages, more walks, and fewer strikeouts** (traditional contact hitters).")
+    st.write(
+        "  - **Lower PC1 values** indicate **more home runs, higher strikeout rates, and lower walk/contact skills** (modern power hitters).")
 
-    st.write("- **PC2 differentiates between sluggers and plate-discipline hitters.**")
-    st.write("  - Higher PC2 values align with **power hitters who excel at slugging and extra-base hits**.")
-    st.write(
-        "  - Lower PC2 values are linked to **players with strong plate discipline, prioritizing walks and on-base percentage over raw power.**")
-
-    st.write(
-        "- **A high PC1 score suggests a power-heavy decade, emphasizing home runs at the cost of contact and walks.**")
-    st.write(
-        "  - This trend aligns with **modern baseball**, where hitters accept high strikeout rates in exchange for greater power output.")
+    st.write("- **PC2 still differentiates between sluggers and disciplined hitters.**")
+    st.write("  - **Higher PC2 values** align with **aggressive sluggers focused on extra-base hits and high SLG**.")
+    st.write("  - **Lower PC2 values** suggest **plate-discipline hitters**, who emphasize OBP and BB% over raw power.")
 
     st.write(
-        "- **A high PC2 score indicates a preference for aggressive, high-slugging hitters over those who prioritize patience and walks.**")
+        "- **A low PC1 score now signifies a power-heavy decade**, where home runs and strikeouts dominate, often at the cost of consistent contact or plate discipline.")
     st.write(
-        "  - Lower PC2 values suggest a more balanced or disciplined offensive approach, with an emphasis on **on-base skills over raw power.**")
+        "- **A high PC1 score reflects a contact-driven era**, prioritizing getting on base, minimizing strikeouts, and hitting for average.")
+
+    st.write(
+        "- **A high PC2 score represents slug-first hitters**, while lower PC2 scores indicate more balanced or OBP-focused profiles.")
 
     st.write("### **Conclusion:**")
-    st.write("- The biggest jump appears from **1980 to 2000**, which aligns with the home run surge and changing offensive philosophies.")
-    st.write("- **1950 was an outlier**, suggesting a fundamentally different offensive approach compared to later years.")
-    st.write("- **1960 and 1970 demonstrate a close relationship**, showing that hitting remained relatively stable.")
-    st.write("- **Modern decades (1990-2010) cluster closer together**, suggesting hitting strategies have stabilized after the steroid era.")
+    st.write(
+        "- The **most dramatic shift** occurs from **1980 to 2000**, aligning with the steroid era and power surge in MLB.")
+    st.write(
+        "- **1950** is a clear outlier with low contact and low power, suggesting a more conservative offensive environment.")
+    st.write("- **1960–1970** show continuity, with modest increases in contact metrics.")
+    st.write(
+        "- **1990 to 2010** form a relatively tight cluster, implying that modern hitting philosophies had stabilized post-2000.")
 
     st.markdown(":red[Continue to Hitting Trends Analysis to Continue the investigation]")
+
