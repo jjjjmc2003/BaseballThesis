@@ -59,6 +59,7 @@ DATA SUMMARY:
 {stats_summary}
 
 Answer:"""
+
         return prompt
 
 
@@ -92,7 +93,15 @@ Answer:"""
             client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
             # Generate prompt with stats summary
-            prompt = generate_prompt(user_question, df)
+            # Use GPT's general knowledge if user prompts it
+            if "using knowledge outside of the dataset" in user_question.lower():
+                prompt = f"""You are a knowledgeable assistant. Please answer the following question using general knowledge and reasoning beyond any specific dataset:
+
+            {user_question}
+
+            Answer:"""
+            else:
+                prompt = generate_prompt(user_question, df)
 
             # Show spinner while GPT thinks
             with st.spinner("Thinking... 💭"):
