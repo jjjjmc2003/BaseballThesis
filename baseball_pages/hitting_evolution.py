@@ -93,6 +93,11 @@ def show():
 
     if not summary_stats_avg.empty:
         pca_results, variance, loadings, feature_names = perform_pca(summary_stats_avg)
+
+        # Flip PC1 to represent increasing Contact Hitting
+        pca_results[:, 0] = -pca_results[:, 0]  # Flip PC1 scores
+        loadings[0, :] = -loadings[0, :]  # Flip PC1 loadings
+
         pca_df = pd.DataFrame(pca_results, columns=["PC1", "PC2"], index=summary_stats_avg.columns)
 
         # PCA Scatter Plot
