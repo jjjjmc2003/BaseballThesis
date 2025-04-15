@@ -9,40 +9,32 @@ from baseball_pages import dashboard, thesis_overview, video, hitting_evolution,
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", [
     "Dashboard",
-    #"Thesis Overview",
     "Year by Year TSNE",
     "Players (Contact vs Power)",
-    #"Insights",
-    "Hitting Evolution Analysis",
-    "Hitting Trends Analysis",
+    "Analysis of Hitting Evolution (1950-2010)",
+    "Decade Hitting Trends Analysis",
+    "Year by Year Hitting Trend Analysis",
     "Chatbot",
-    "Year by Year Analysis"
+
 ])
 
 # If Dashboard selected
 if page == "Dashboard":
     dashboard.show()
 
-# If Thesis Overview selected
-#elif page == "Thesis Overview":
- #   thesis_overview.show()
-
-# If YouTube Video selected
+# If TSNE selected
 elif page == "Year by Year TSNE":
     video.show()
 
 elif page == "Players (Contact vs Power)":
     players.show();
 
-# If Insights selected
-#elif page == "Insights":
-#    insights.show()
-elif page == "Hitting Evolution Analysis":
+elif page == "Analysis of Hitting Evolution (1950-2010)":
     hitting_evolution.show()
 # If Hitting Trends Analysis selected
-elif page == "Hitting Trends Analysis":
+elif page == "Decade Hitting Trends Analysis":
     # Streamlit Title
-    st.title("Hitting Trends (1950-2010)")
+    st.title("Decade Hitting Trends Analysis")
 
     # Set up local data directory
     DATA_DIR = "data"
@@ -192,6 +184,6 @@ elif page == "Hitting Trends Analysis":
 elif page == "Chatbot":
     chatbot.show()
 
-elif page == "Year by Year Analysis":
+elif page == "Year by Year Hitting Trend Analysis":
     yearly_analysis.show()
 
