@@ -11,7 +11,7 @@ import seaborn as sns
 def show():
     st.title("Players (Power vs Contact)")
 
-    st.write("Note on the Player Names: * - bats left-handed, # - bats both (switch hitter), nothing - bats right,")
+    st.write("Note on the Player Names: * - bats left-handed, # - bats both (switch hitter),\n nothing - bats right")
 
     # Set up local data directory
     DATA_DIR = "data"
