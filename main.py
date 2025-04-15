@@ -10,13 +10,13 @@ st.sidebar.title("Navigation")
 page = st.sidebar.radio("Go to", [
     "Dashboard",
     #"Thesis Overview",
-    "Decade TSNE",
+    "Year by Year TSNE",
     "Players (Contact vs Power)",
     #"Insights",
     "Hitting Evolution Analysis",
     "Hitting Trends Analysis",
     "Chatbot",
-    "Year-by-Year Analysis"
+    "Year by Year Analysis"
 ])
 
 # If Dashboard selected
@@ -28,7 +28,7 @@ if page == "Dashboard":
  #   thesis_overview.show()
 
 # If YouTube Video selected
-elif page == "Decade TSNE":
+elif page == "Year by Year TSNE":
     video.show()
 
 elif page == "Players (Contact vs Power)":
@@ -192,6 +192,6 @@ elif page == "Hitting Trends Analysis":
 elif page == "Chatbot":
     chatbot.show()
 
-elif page == "Year-by-Year Analysis":
+elif page == "Year by Year Analysis":
     yearly_analysis.show()
 

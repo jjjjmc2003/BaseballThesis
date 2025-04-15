@@ -13,5 +13,5 @@ def show():
     )
 
     # Embed YouTube video
-    st.video("https://youtu.be/QTlPt20pQaU")
+    st.video("https://youtu.be/n8caodd2ZzA?si=70ldPUJfHY7cNaof")
 
