@@ -29,7 +29,7 @@ elif page == "Year by Year TSNE":
 elif page == "Players (Contact vs Power)":
     players.show();
 
-elif page == "Analysis of Hitting Evolution (1950-2010)":
+elif page == "Analysis of Hitting Evolution":
     hitting_evolution.show()
 # If Hitting Trends Analysis selected
 elif page == "Decade Hitting Trends Analysis":
