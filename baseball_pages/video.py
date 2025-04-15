@@ -32,6 +32,8 @@ def show():
         "expand or contract, and how new groupings appear or vanish over time"
     )
 
+    st.header("Interpretation of Results")
+
     # 1950s
     st.subheader("1950s: Clarity and Cohesion")
     st.write(
