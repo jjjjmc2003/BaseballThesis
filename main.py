@@ -11,7 +11,7 @@ page = st.sidebar.radio("Go to", [
     "Dashboard",
     "Year by Year TSNE",
     "Players (Contact vs Power)",
-    "Analysis of Hitting Evolution (1950-2010)",
+    "Analysis of Hitting Evolution",
     "Decade Hitting Trends Analysis",
     "Year by Year Hitting Trend Analysis",
     "Chatbot",
