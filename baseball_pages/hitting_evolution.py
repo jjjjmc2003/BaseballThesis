@@ -132,12 +132,14 @@ def show():
 
     st.write(
         "1950 appears isolated from the modern eras, indicating a significantly different offensive profile. "
-        "Its position suggests low contact and low power metrics, likely reflective of a more balanced or conservative hitting era.\n\n"
-        "1960 and 1970 are clustered together, indicating stability in offensive strategies, with a slight increase in contact metrics.\n\n"
-        "By 1980, we begin to see a noticeable shift toward higher power metrics and lower contact efficiency, "
-        "marking the early transition to modern hitting approaches.\n\n"
-        "2000 stands out the most, moving farthest left along PC1 and highest along PC2, consistent with the steroid era's focus on extreme power "
-        "— high home run rates, strikeouts, and slugging.\n\n"
+        "Its position suggests high contact and low power metrics,  reflective of the highly contact hitting era it was.\n\n"
+        "1960 and 1970 are clustered together, indicating stability in offensive strategies, with a decrease in contact metrics and a remaining"
+        "lack of power. This range was known for the domination of pitchers leading to the lowering of the mound in 1968, to increase run production."
+        "So these low offensive numbers reflect that domination by pitchers\n\n"
+        "In 1980, there is a noticeable shift toward higher power and contact, meaning that hitters dominated this year putting up great contact and power numbers"
+        ".\n\n"
+        "2000 stands out the most, moving further left along PC1 and highest along PC2, consistent with the steroid era's focus on extreme power "
+        " meaning high home run rates, strikeouts, and slugging.\n\n"
         "2010 shifts back toward the center, closer to 1990, suggesting a partial recalibration away from peak power, "
         "possibly due to improved testing and a renewed emphasis on balanced hitting."
     )
@@ -147,30 +149,33 @@ def show():
 
     st.write("- **PC1 represents the axis from power hitting to contact hitting.**")
     st.write(
-        "  - **Higher PC1 values** reflect **high batting averages, more walks, and fewer strikeouts** (traditional contact hitters).")
+        "  - **Higher PC1 values** reflect **fewer homeruns, more walks, and fewer strikeouts** (traditional contact hitters).")
     st.write(
-        "  - **Lower PC1 values** indicate **more home runs, higher strikeout rates, and lower walk/contact skills** (modern power hitters).")
+        "  - **Lower PC1 values** indicate **more home runs, higher strikeout rates, and lower walks** (modern power hitters).")
 
     st.write("- **PC2 still differentiates between sluggers and disciplined hitters.**")
     st.write("  - **Higher PC2 values** align with **aggressive sluggers focused on extra-base hits and high SLG**.")
     st.write("  - **Lower PC2 values** suggest **plate-discipline hitters**, who emphasize OBP and BB% over raw power.")
 
     st.write(
-        "- **A low PC1 score now signifies a power-heavy decade**, where home runs and strikeouts dominate, often at the cost of consistent contact or plate discipline.")
+        "- **A low PC1 score now signifies a low contact decade**, where strikeouts dominate, meaning less consistent contact or plate discipline.")
     st.write(
         "- **A high PC1 score reflects a contact-driven era**, prioritizing getting on base, minimizing strikeouts, and hitting for average.")
 
     st.write(
-        "- **A high PC2 score represents slug-first hitters**, while lower PC2 scores indicate more balanced or OBP-focused profiles.")
+        "- **A high PC2 score represents slug-first hitters** meaning a lot of homeruns, strikeouts, and few walks, while lower PC2 scores indicate fewer homeruns, fewer strikeouts, and more walks.")
 
     st.write("### **Conclusion:**")
     st.write(
         "- The **most dramatic shift** occurs from **1980 to 2000**, aligning with the steroid era and power surge in MLB.")
     st.write(
-        "- **1950** is a clear outlier with low contact and low power, suggesting a more conservative offensive environment.")
-    st.write("- **1960–1970** show continuity, with modest increases in contact metrics.")
+        "- **1950** is a clear outlier with extremely high contact and low power, suggesting a contact oriented offensive environment.")
+    st.write("- **1960–1970** show continuity, with decreases in contact metrics, demonstrating the domination of pitching at that time.")
     st.write(
-        "- **1990 to 2010** form a relatively tight cluster, implying that modern hitting philosophies had stabilized post-2000.")
+        "- **1990 and 2010** show a similar output in terms of power, but less contact in the modern era, suggesting that the steroid era approach remains without the steroids leading to less contact and fewer power output")
 
+    st.write("Out of all the years **2000** stands out the most with the highest power numbers of any year and average contact output. This suggests that the league at the time was putting out power numbers never seen before, "
+             "which is indicative of reality as the homerun race between Mark McGuire and Sammy Sosa was going on in this season, Barry Bonds was outputing power numbers never seen before, and the entire league was hitting more homeruns."
+             "This accurately represents the Steroid Era demonstrating a monster increase in power output, the likes of which had never been seen and since have never been repeated")
     st.markdown(":red[Continue to Hitting Trends Analysis to Continue the investigation]")
 
