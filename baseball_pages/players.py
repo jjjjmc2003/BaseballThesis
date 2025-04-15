@@ -11,7 +11,7 @@ import seaborn as sns
 def show():
     st.title("Players (Power vs Contact)")
 
-    st.caption("Note on the Player Names: * - bats left-handed, # - bats  (switch hitter), nothing - bats right,"
+    st.write("Note on the Player Names: * - bats left-handed, # - bats  (switch hitter), nothing - bats right,"
                " ? - unknown")
 
     # Set up local data directory
@@ -34,7 +34,6 @@ def show():
                 if response.status_code == 200:
                     with open(local_path, "wb") as f:
                         f.write(response.content)
-                    st.success(f"✅ Downloaded: {file_name}")
                 else:
                     st.error(f"❌ Error downloading {file_name} (HTTP {response.status_code})")
             except Exception as e:
