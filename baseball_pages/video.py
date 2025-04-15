@@ -22,6 +22,17 @@ def show():
         "styles clustered and diverged over time."
     )
 
+    st.header("TSNE Through the Years Colored By PA")
+    st.video("https://youtu.be/QdGHw5WFNSg")
+
+    st.write(
+        "To better understand the TSNE plots seen above these are the same plots only colored by Plate Appearances"
+        "in an effort to better display the trends of everyday players and the bench players. With a TSNE it is important"
+        "to remember that it does not preserve global orientation. That means that the entire projection can rotate, flip, "
+        "or shift between years.With that being said what matters is which shapes emerge, how clusters "
+        "expand or contract, and how new groupings appear or vanish over time"
+    )
+
     # 1950s
     st.subheader("1950s: Clarity and Cohesion")
     st.write(
