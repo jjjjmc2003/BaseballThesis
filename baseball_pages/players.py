@@ -34,6 +34,7 @@ def show():
                 if response.status_code == 200:
                     with open(local_path, "wb") as f:
                         f.write(response.content)
+                    st.success(f"✅ Downloaded: {file_name}")
                 else:
                     st.error(f"❌ Error downloading {file_name} (HTTP {response.status_code})")
             except Exception as e:
@@ -58,10 +59,6 @@ def show():
         return data
 
     data = load_data()
-
-    # Show confirmation message
-    if data:
-        st.write("✅ Successfully loaded all available data!")
 
     # Process Data for Clustering
     def process_data(data):
