@@ -21,7 +21,6 @@ def show():
         "hitters’ offensive profiles from a single season, allowing us to see how player types and hitting "
         "styles clustered and diverged over time."
     )
-
     st.header("TSNE Through the Years Colored By PA")
     st.video("https://youtu.be/QdGHw5WFNSg")
 
