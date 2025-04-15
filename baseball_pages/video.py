@@ -22,61 +22,67 @@ def show():
         "styles clustered and diverged over time."
     )
 
-    st.header("1950s: Clarity and Cohesion")
+    # 1950s
+    st.subheader("1950s: Clarity and Cohesion")
     st.write(
-        "During the early 1950s, the clusters are tightly grouped, with players forming a dense central region. "
-        "This reflects a more homogenized style of hitting, likely leaning toward traditional contact-oriented play. "
-        "There are very few outliers, indicating that most hitters had very similar offensive profiles. "
-        "As the decade progresses, clusters begin to expand slightly, foreshadowing more offensive variety in future decades."
+        "The 1950s clusters are compact and tightly grouped, reflecting an era of low variance in player types and output. "
+        "Offensive styles were conservative: high contact, low strikeout, low walk rates. In 1955, for instance, the MLB average K% was just 9.4%, "
+        "and BB% hovered around 9.5%, indicating consistency in approach. Players shared similar profiles — think Richie Ashburn or Nellie Fox — high BA, low HR."
     )
 
-    st.header("1960s: Tightening and Conformity")
+    # 1960s
+    st.subheader("1960s: Tightening and Conformity")
     st.write(
-        "The 1960s show a trend back toward dense clustering. Especially in the mid-to-late 60s, the data points "
-        "are extremely compact. This reflects the 'Pitcher's Era' where offensive performance dropped dramatically. "
-        "The 1968 plot in particular is extremely tight, confirming the suppressed offense that led to MLB lowering "
-        "the mound in 1969 to boost scoring."
+        "In the early '60s, t-SNE projections shrink further, especially 1963–1966, forming a very dense central blob. "
+        "This reflects the historically low offensive output during this period. 1968, 'The Year of the Pitcher', is a standout — "
+        "league-wide BA fell to .237 and OBP to .299, the lowest in modern history. This compression likely explains the ultra-clustered projection. "
+        "The shape suggests the league's hitters were statistically more alike than ever before."
     )
 
-    st.header("1970s: Expansion and Emergence of Outliers")
+    # 1970s
+    st.subheader("1970s: Expansion and Emergence of Outliers")
     st.write(
-        "In the 1970s, the clusters begin to stretch horizontally, reflecting greater variance in player profiles. "
-        "This is when we start seeing clear separation between player types — more home run hitters, high OBP players, "
-        "and aggressive swingers all occupying distinct spaces within the t-SNE plots. "
-        "By the late 70s, isolated sub-clusters begin to form, signaling the rise of specialized hitters."
+        "The 1970s display more variance. By 1973, clusters begin to stretch horizontally and form minor separations. "
+        "This reflects the introduction of the DH in the AL and the start of true role divergence. For instance, the 1977 season had multiple high-HR, "
+        "low-contact sluggers emerge alongside traditional hitters. League OBP also began to diverge more clearly by player archetype."
     )
 
-    st.header("1980s: Dynamic Shifts and Role Differentiation")
+    # 1980s
+    st.subheader("1980s: Dynamic Shifts and Role Differentiation")
     st.write(
-        "The early 1980s show vertical stacking in the plots — suggesting a wider spread in certain offensive stats "
-        "like strikeouts or batting average. From 1982-1984, the clusters flatten horizontally, creating a plane of "
-        "diverse hitter profiles. By 1986-1988, the scatter expands further, showing subgroup formations likely "
-        "representing power hitters, contact hitters, or OBP specialists."
+        "From 1982 to 1987, the clusters expand and arc downward, indicating new offensive bifurcations. "
+        "1983 is a turning point — OBP and BB% start separating. You can see distinct clusters emerge: one for contact hitters like Wade Boggs (low K%, high BB%), "
+        "and one for mid-power threats like Dale Murphy (elevated HR/PA, ~5%). These projections reveal a decade increasingly defined by specialization."
     )
 
-    st.header("1990s: Power Surge and Stratification")
+    # 1990s
+    st.subheader("1990s: Power Surge and Stratification")
     st.write(
-        "The early 1990s show more fragmentation and separation in the data. As we move into 1993-1995, the plots "
-        "begin displaying wide spreads with both dense clusters and extreme outliers. This corresponds to the early "
-        "stages of the steroid era where home run rates surged. By 1996-1999, distinct pods of players emerge, "
-        "showing a league dominated by power-heavy offensive profiles."
+        "In 1993 and especially by 1996, projections stretch vertically, indicating offensive stratification. "
+        "1998 stands out: MLB average HR/PA hit a peak of 4.1%, and SLG surpassed .420. Players like McGwire and Sosa created statistical outliers. "
+        "t-SNE clearly separates power-focused sluggers from average contact hitters. The projection forms a winged shape with bulging lower-left clusters, "
+        "which likely correspond to lower OBP, high-K% hitters."
     )
 
-    st.header("2000s: Extremes and Re-balancing")
+    # 2000s
+    st.subheader("2000s: Extremes and Re-balancing")
     st.write(
-        "The early 2000s continue the trends from the late 90s — broad spreads, isolated clusters, and clear statistical outliers. "
-        "However, from 2004 to 2006, we see the densest formations shift upward, indicating a shift toward more balanced hitting "
-        "profiles with fewer extremely low performers. From 2007 to 2010, clusters begin to collapse slightly, reflecting a re-balancing "
-        "of offensive profiles likely due to increased regulation and the end of the steroid era."
+        "From 2001 to 2006, the visualizations grow more circular again — suggesting re-normalization. "
+        "The 2004 plot is more compact again despite the offensive firepower (e.g., Bonds, Pujols). This reflects a balance of extremes: "
+        "more hitters with elite OBP (e.g., Bonds’ .609 OBP in 2004), but also a solid average across the league. By 2010, the shape flattens horizontally, "
+        "hinting at a league-wide trend toward plate discipline and away from all-or-nothing hitting."
     )
 
+    # Summary bullets
     st.subheader("Summary of Decade Trends")
-    st.write(
-        "- 1950s–60s: Homogeneity and suppression of extremes.\n"
-        "- 1970s: Gradual expansion and emergence of offensive variety.\n"
-        "- 1980s: Rising differentiation and formation of player subtypes.\n"
-        "- 1990s: Power era with major statistical outliers.\n"
-        "- 2000s: Offensive peaks followed by controlled normalization."
-    )
+    st.markdown("""
+       - **1950s**: Small compact clusters; low variance in hitter profiles.
+       - **1960s**: Most clustered decade; especially 1968 due to offensive suppression.
+       - **1970s**: Gradual expansion due to DH rule and expansion teams.
+       - **1980s**: Clearer separation of contact vs. power hitters.
+       - **1990s**: Largest spread; HR/PA, SLG, and K% caused major statistical divergence.
+       - **2000s**: Balanced variance; circular clusters suggest return to equilibrium via improved OBP.
+       """)
+
 
 
