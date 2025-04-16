@@ -28,7 +28,7 @@ def show():
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
 
-    # LOAD COMBINED DATASET
+    # LOAD DATA
     data = ["data/combined_yearly_stats_all_players.csv"]
     existing_files = [f for f in data if os.path.exists(f)]
 
@@ -42,16 +42,14 @@ def show():
         st.error(f"❌ Error loading data: {e}")
         return
 
-    # Extract years from question
+    # UTILITIES
     def extract_years_from_question(q):
         return re.findall(r"\b(19[5-9][0-9]|200[0-9]|2010)\b", q)
 
-    # Decide if question is broad
     def is_broad_question(q):
         return ("trend" in q.lower() or "change" in q.lower() or "over time" in q.lower() or
                 len(extract_years_from_question(q)) > 1)
 
-    # Summarize by decade
     def summarize_by_decade(df):
         summary = ""
         for decade_start in range(1950, 2010, 10):
@@ -61,7 +59,6 @@ def show():
                 summary += f"\n📅 {decade_start}s Summary:\n{stats}\n"
         return summary
 
-    # Generate prompt
     def generate_prompt(question, context_df):
         if is_broad_question(question):
             summary_text = summarize_by_decade(context_df)
@@ -72,7 +69,7 @@ def show():
                 context_df = context_df[context_df["Year"] == year]
             summary_text = context_df.describe(include='all').to_string()
 
-        prompt = f"""You are a baseball analyst bot trained on MLB player data from 1950 to 2010.
+        return f"""You are a baseball analyst trained on MLB data from 1950 to 2010.
 
 Use the following data summary to answer the user's question.
 
@@ -83,20 +80,18 @@ QUESTION:
 {question}
 
 Answer:"""
-        return prompt
 
-    # Show chat history
+    # CHAT HISTORY DISPLAY
     if st.session_state.chat_history:
         st.markdown("### 🗂️ Chat History")
         for i, (q, a) in enumerate(st.session_state.chat_history, 1):
             with st.expander(f"Q{i}: {q}"):
                 st.write(a)
 
-    # Export chat history if history exists
+    # ALWAYS SHOW EXPORT BUTTONS IF HISTORY EXISTS
     if st.session_state.chat_history:
         def get_txt_history():
-            return "\n\n".join(
-                f"Q{i + 1}: {q}\nA{i + 1}: {a}" for i, (q, a) in enumerate(st.session_state.chat_history))
+            return "\n\n".join(f"Q{i+1}: {q}\nA{i+1}: {a}" for i, (q, a) in enumerate(st.session_state.chat_history))
 
         def get_csv_history():
             df_export = pd.DataFrame(st.session_state.chat_history, columns=["Question", "Answer"])
@@ -111,26 +106,24 @@ Answer:"""
         with col2:
             st.download_button("📄 Download as .csv", get_csv_history(), "chat_history.csv", "text/csv")
 
-    # Clear history
+    # CLEAR CHAT BUTTON
     if st.session_state.chat_history:
         if st.button("🧹 Clear History"):
             st.session_state.chat_history = []
             st.rerun()
 
-    # Chat input
+    # CHAT INPUT
     st.markdown("#### 🔍 Type your question below:")
-    st.caption('Note: Remember use this prompt for questions you want answers for not based on the dataset of 1950-2010 '
-               'hitters **"using knowledge outside of the dataset"**')
     user_question = st.text_input("", placeholder="e.g. How did home run rates change over time?")
 
-    # GPT Response
+    # HANDLE INPUT
     if user_question:
         try:
             client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-            # Detect if user wants general GPT knowledge
+            # Decide prompt type
             if "using knowledge outside of the dataset" in user_question.lower():
-                prompt = f"""You are a knowledgeable baseball analyst assistant. Please answer the following question using general knowledge and reasoning beyond any specific dataset:
+                prompt = f"""You are a knowledgeable assistant. Please answer the following question using general knowledge and reasoning beyond any specific dataset:
 
 {user_question}
 
@@ -138,7 +131,7 @@ Answer:"""
             else:
                 prompt = generate_prompt(user_question, df)
 
-            # Run GPT
+            # Get GPT response
             with st.spinner("Thinking... 💭"):
                 response = client.chat.completions.create(
                     model="gpt-3.5-turbo",
@@ -146,12 +139,11 @@ Answer:"""
                 )
 
             answer = response.choices[0].message.content
-
-            # Save and show
             st.session_state.chat_history.append((user_question, answer))
+
+            # Display
             st.markdown("### 🧠 GPT’s Analysis:")
             st.success(answer)
-
 
         except Exception as e:
             st.error(f"⚠️ GPT API Error: {e}")
