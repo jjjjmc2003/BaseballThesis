@@ -87,14 +87,18 @@ Answer:"""
                 st.write(a)
 
     # ALWAYS SHOW EXPORT BUTTONS IF HISTORY EXISTS
-    if st.session_state.chat_history:
-        def get_txt_history():
-            return "\n\n".join(f"Q{i+1}: {q}\nA{i+1}: {a}" for i, (q, a) in enumerate(st.session_state.chat_history))
+    # Always define these — even if chat is empty
+    def get_txt_history():
+        if "chat_history" in st.session_state and st.session_state.chat_history:
+            return "\n\n".join(
+                f"Q{i + 1}: {q}\nA{i + 1}: {a}" for i, (q, a) in enumerate(st.session_state.chat_history))
+        return "No chat history to export."
 
-        def get_csv_history():
+    def get_csv_history():
+        if "chat_history" in st.session_state and st.session_state.chat_history:
             df_export = pd.DataFrame(st.session_state.chat_history, columns=["Question", "Answer"])
             return df_export.to_csv(index=False).encode("utf-8")
-
+        return "".encode("utf-8")
 
     # CLEAR CHAT BUTTON
     if st.session_state.chat_history:
