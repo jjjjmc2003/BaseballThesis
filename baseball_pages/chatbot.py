@@ -97,14 +97,7 @@ Answer:"""
             df_export = pd.DataFrame(st.session_state.chat_history, columns=["Question", "Answer"])
             return df_export.to_csv(index=False).encode("utf-8")
 
-        st.markdown("### 💾 Export Chat History")
-        col1, col2 = st.columns(2)
 
-        with col1:
-            st.download_button("🔘 Download as .txt", get_txt_history(), "chat_history.txt", "text/plain")
-
-        with col2:
-            st.download_button("📄 Download as .csv", get_csv_history(), "chat_history.csv", "text/csv")
 
     # CLEAR CHAT BUTTON
     if st.session_state.chat_history:
@@ -144,6 +137,15 @@ Answer:"""
             # Display
             st.markdown("### 🧠 GPT’s Analysis:")
             st.success(answer)
+
+            st.markdown("### 💾 Export Chat History")
+            col1, col2 = st.columns(2)
+
+            with col1:
+                st.download_button("🔘 Download as .txt", get_txt_history(), "chat_history.txt", "text/plain")
+
+            with col2:
+                st.download_button("📄 Download as .csv", get_csv_history(), "chat_history.csv", "text/csv")
 
         except Exception as e:
             st.error(f"⚠️ GPT API Error: {e}")
