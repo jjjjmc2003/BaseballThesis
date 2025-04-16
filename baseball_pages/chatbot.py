@@ -22,7 +22,7 @@ def show():
     st.markdown("### 💬 Welcome to the **Baseball Stats Chatbot**")
     st.write("Ask anything about MLB hitters from **1950 to 2010** 📊⚾")
     st.write("**Note**: To ask about anything non-baseball related or not related to the dataset, prompt it using:\n"
-             "`Using Knowledge Outside of the Dataset` — this will help it respond more accurately.")
+             "**Outside Knowledge** this will help it respond more accurately.")
 
     # CHAT HISTORY
     if "chat_history" not in st.session_state:
@@ -106,6 +106,7 @@ Answer:"""
 
     # CHAT INPUT
     st.markdown("#### 🔍 Type your question below:")
+    st.caption('Remember for questions not based on dataset use **"Outside Knowledge"**')
     user_question = st.text_input("", placeholder="e.g. How did home run rates change over time?")
 
     # HANDLE INPUT
@@ -114,7 +115,7 @@ Answer:"""
             client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
             # Decide prompt type
-            if "using knowledge outside of the dataset" in user_question.lower():
+            if "outside knowledge" in user_question.lower():
                 prompt = f"""You are a knowledgeable baseball assistant. Please answer the following question using general knowledge and reasoning beyond any specific dataset:
 
 {user_question}
