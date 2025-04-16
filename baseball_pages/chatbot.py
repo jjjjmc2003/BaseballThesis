@@ -1,13 +1,11 @@
 import streamlit as st
 import pandas as pd
 import os
-from openai import OpenAI
 import re
+from openai import OpenAI
 
 def show():
-
-    # PAGE HEADER + INSTRUCTIONS
-
+    # PAGE STYLING
     st.markdown("""
         <style>
             .main {background-color: #f8f9fa;}
@@ -20,166 +18,135 @@ def show():
         </style>
     """, unsafe_allow_html=True)
 
+    # PAGE HEADER
     st.markdown("### 💬 Welcome to the **Baseball Stats Chatbot**")
     st.write("Ask anything about MLB hitters from **1950 to 2010** 📊⚾")
-    st.write("**Note**: to ask about anything non baseball related or not related to the dataset prompt it using"
-               '\n"Using Knowledge Outside of the Dataset" will help it respond more accurately')
+    st.write("**Note**: To ask about anything non-baseball related or not related to the dataset, prompt it using:\n"
+             "`Using Knowledge Outside of the Dataset` — this will help it respond more accurately.")
 
-
-    # Chat History
-
+    # CHAT HISTORY
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = []
 
-
-    # Load Historical Data
-
-    decades = [f"data/{decade}stats.csv" for decade in range(1950, 2010, 10)]
-    existing_files = [f for f in decades if os.path.exists(f)]
+    # LOAD COMBINED DATASET
+    data = ["data/combined_yearly_stats_all_players.csv"]
+    existing_files = [f for f in data if os.path.exists(f)]
 
     if not existing_files:
-        st.warning("⚠️ No data files found in the 'data/' folder.")
+        st.warning("⚠️ Combined data file not found in the 'data/' folder.")
         return
 
-    dataframes = []
-
-    for file in existing_files:
-        try:
-            # Extract year from filename like "1950stats.csv"
-            year = int(os.path.basename(file).split("stats")[0])
-            df_year = pd.read_csv(file, encoding="ISO-8859-1")
-            df_year["Year"] = year  # Add Year column for filtering
-            dataframes.append(df_year)
-        except Exception as e:
-            st.error(f"❌ Error loading {file}: {e}")
-            return  # Only return if a specific file causes a crash
-
-    if not dataframes:
-        st.error("❌ No valid dataframes were loaded.")
+    try:
+        df = pd.read_csv(existing_files[0], encoding="ISO-8859-1")
+    except Exception as e:
+        st.error(f"❌ Error loading data: {e}")
         return
 
-    df = pd.concat(dataframes, ignore_index=True)
+    # Extract years from question
+    def extract_years_from_question(q):
+        return re.findall(r"\b(19[5-9][0-9]|200[0-9]|2010)\b", q)
 
-    # Prompt Generator
+    # Decide if question is broad
+    def is_broad_question(q):
+        return ("trend" in q.lower() or "change" in q.lower() or "over time" in q.lower() or
+                len(extract_years_from_question(q)) > 1)
 
+    # Summarize by decade
+    def summarize_by_decade(df):
+        summary = ""
+        for decade_start in range(1950, 2010, 10):
+            decade_df = df[(df["Year"] >= decade_start) & (df["Year"] < decade_start + 10)]
+            if not decade_df.empty:
+                stats = decade_df.describe().to_string()
+                summary += f"\n📅 {decade_start}s Summary:\n{stats}\n"
+        return summary
+
+    # Generate prompt
     def generate_prompt(question, context_df):
-        # Optional: auto-detect year from question
-
-        year_match = re.findall(r"\b(19[5-9][0-9]|200[0-9]|2010)\b", question)
-        if year_match:
-            year = int(year_match[0])
-            context_df = context_df[context_df["Year"] == year]
-            player_count = context_df["Player"].nunique() if "Player" in context_df.columns else len(context_df)
-            extra_summary = f"\nNOTE: There are {player_count} unique players recorded in the {year} season."
+        if is_broad_question(question):
+            summary_text = summarize_by_decade(context_df)
         else:
-            extra_summary = ""
+            year_match = extract_years_from_question(question)
+            if year_match:
+                year = int(year_match[0])
+                context_df = context_df[context_df["Year"] == year]
+            summary_text = context_df.describe(include='all').to_string()
 
-        # Describe + player count
-        stats_summary = context_df.describe(include='all').to_string()
-        prompt = f"""You are a baseball analyst bot trained on MLB data from 1950 to 2010. 
-        Use the following data summary to answer this question: {question}
+        prompt = f"""You are a baseball analyst bot trained on MLB player data from 1950 to 2010.
 
-        DATA SUMMARY:
-        {stats_summary}
+Use the following data summary to answer the user's question.
 
-        {extra_summary}
+DATA SUMMARY:
+{summary_text}
 
-        Answer:"""
+QUESTION:
+{question}
 
+Answer:"""
         return prompt
 
-
-    #Chat History
-
+    # Show chat history
     if st.session_state.chat_history:
         st.markdown("### 🗂️ Chat History")
-        for i, (q, a) in enumerate(st.session_state.chat_history[::+1], 1):
+        for i, (q, a) in enumerate(st.session_state.chat_history, 1):
             with st.expander(f"Q{i}: {q}"):
                 st.write(a)
 
-
-    # Clear Chat Button
-
-    if st.session_state.chat_history != []:
+    # Clear history
+    if st.session_state.chat_history:
         if st.button("🧹 Clear History"):
             st.session_state.chat_history = []
             st.rerun()
 
-
-    # Chat Input
+    # Chat input
     st.markdown("#### 🔍 Type your question below:")
     user_question = st.text_input("", placeholder="e.g. How did home run rates change over time?")
 
-
     # GPT Response
-
     if user_question:
         try:
-            # Initialize OpenAI client using Streamlit secrets
             client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
-            # Generate prompt with stats summary
-            # Use GPT's general knowledge if user prompts it
+            # Detect if user wants general GPT knowledge
             if "using knowledge outside of the dataset" in user_question.lower():
-                prompt = f"""You are a knowledgeable baseball chatbot. Please answer the following question using general baseball knowledge and reasoning beyond any specific dataset:
+                prompt = f"""You are a knowledgeable assistant. Please answer the following question using general knowledge and reasoning beyond any specific dataset:
 
-            {user_question}
+{user_question}
 
-            Answer:"""
+Answer:"""
             else:
                 prompt = generate_prompt(user_question, df)
 
-            # Show spinner while GPT thinks
+            # Run GPT
             with st.spinner("Thinking... 💭"):
                 response = client.chat.completions.create(
                     model="gpt-3.5-turbo",
                     messages=[{"role": "user", "content": prompt}]
                 )
 
-            # Save and display response
             answer = response.choices[0].message.content
+
+            # Save and show
             st.session_state.chat_history.append((user_question, answer))
             st.markdown("### 🧠 GPT’s Analysis:")
             st.success(answer)
 
-            # -------------------------------
-            # 💾 Export Chat History
-            # -------------------------------
-            import io
+            # Export history
+            def get_txt_history():
+                return "\n\n".join(f"Q{i+1}: {q}\nA{i+1}: {a}" for i, (q, a) in enumerate(st.session_state.chat_history))
 
-            if st.session_state.chat_history:
-                st.markdown("### 💾 Export Chat History")
+            def get_csv_history():
+                df_export = pd.DataFrame(st.session_state.chat_history, columns=["Question", "Answer"])
+                return df_export.to_csv(index=False).encode("utf-8")
 
-                # Convert chat history to plain text
-                def get_txt_history():
-                    history = ""
-                    for i, (q, a) in enumerate(st.session_state.chat_history, 1):
-                        history += f"Q{i}: {q}\nA{i}: {a}\n\n"
-                    return history
+            st.markdown("### 💾 Export Chat History")
+            col1, col2 = st.columns(2)
 
-                # Convert chat history to CSV
-                def get_csv_history():
-                    df = pd.DataFrame(st.session_state.chat_history, columns=["Question", "Answer"])
-                    return df.to_csv(index=False).encode("utf-8")
+            with col1:
+                st.download_button("🔘 Download as .txt", get_txt_history(), "chat_history.txt", "text/plain")
 
-                col1, col2 = st.columns(2)
-
-                with col1:
-                    st.download_button(
-                        label="🔘 Download as .txt",
-                        data=get_txt_history(),
-                        file_name="chat_history.txt",
-                        mime="text/plain"
-                    )
-
-                with col2:
-                    st.download_button(
-                        label="📄 Download as .csv",
-                        data=get_csv_history(),
-                        file_name="chat_history.csv",
-                        mime="text/csv"
-                    )
-
+            with col2:
+                st.download_button("📄 Download as .csv", get_csv_history(), "chat_history.csv", "text/csv")
 
         except Exception as e:
             st.error(f"⚠️ GPT API Error: {e}")
