@@ -92,6 +92,25 @@ Answer:"""
             with st.expander(f"Q{i}: {q}"):
                 st.write(a)
 
+    # Export chat history if history exists
+    if st.session_state.chat_history:
+        def get_txt_history():
+            return "\n\n".join(
+                f"Q{i + 1}: {q}\nA{i + 1}: {a}" for i, (q, a) in enumerate(st.session_state.chat_history))
+
+        def get_csv_history():
+            df_export = pd.DataFrame(st.session_state.chat_history, columns=["Question", "Answer"])
+            return df_export.to_csv(index=False).encode("utf-8")
+
+        st.markdown("### 💾 Export Chat History")
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.download_button("🔘 Download as .txt", get_txt_history(), "chat_history.txt", "text/plain")
+
+        with col2:
+            st.download_button("📄 Download as .csv", get_csv_history(), "chat_history.csv", "text/csv")
+
     # Clear history
     if st.session_state.chat_history:
         if st.button("🧹 Clear History"):
@@ -133,22 +152,6 @@ Answer:"""
             st.markdown("### 🧠 GPT’s Analysis:")
             st.success(answer)
 
-            # Export history
-            def get_txt_history():
-                return "\n\n".join(f"Q{i+1}: {q}\nA{i+1}: {a}" for i, (q, a) in enumerate(st.session_state.chat_history))
-
-            def get_csv_history():
-                df_export = pd.DataFrame(st.session_state.chat_history, columns=["Question", "Answer"])
-                return df_export.to_csv(index=False).encode("utf-8")
-
-            st.markdown("### 💾 Export Chat History")
-            col1, col2 = st.columns(2)
-
-            with col1:
-                st.download_button("🔘 Download as .txt", get_txt_history(), "chat_history.txt", "text/plain")
-
-            with col2:
-                st.download_button("📄 Download as .csv", get_csv_history(), "chat_history.csv", "text/csv")
 
         except Exception as e:
             st.error(f"⚠️ GPT API Error: {e}")
