@@ -41,13 +41,24 @@ def show():
         st.warning("⚠️ No data files found in the 'data/' folder.")
         return
 
-    try:
-        # Use ISO-8859-1 in case of weird characters
-        df = pd.concat([pd.read_csv(file, encoding="ISO-8859-1") for file in existing_files], ignore_index=True)
-    except Exception as e:
-        st.error(f"❌ Error loading data: {e}")
+    dataframes = []
+
+    for file in existing_files:
+        try:
+            # Extract year from filename like "1950stats.csv"
+            year = int(os.path.basename(file).split("stats")[0])
+            df_year = pd.read_csv(file, encoding="ISO-8859-1")
+            df_year["Year"] = year  # Add Year column for filtering
+            dataframes.append(df_year)
+        except Exception as e:
+            st.error(f"❌ Error loading {file}: {e}")
+            return  # Only return if a specific file causes a crash
+
+    if not dataframes:
+        st.error("❌ No valid dataframes were loaded.")
         return
 
+    df = pd.concat(dataframes, ignore_index=True)
 
     # Prompt Generator
 
