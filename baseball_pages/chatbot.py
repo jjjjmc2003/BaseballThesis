@@ -106,7 +106,7 @@ Answer:"""
 
     # CHAT INPUT
     st.markdown("#### 🔍 Type your question below:")
-    st.caption("Remember questions not on dataset say **Outside Knowledge** in question")
+    st.caption("Note: questions not on dataset say **Outside Knowledge** in question")
     user_question = st.text_input("", placeholder="e.g. How did home run rates change over time?")
 
     # HANDLE INPUT
