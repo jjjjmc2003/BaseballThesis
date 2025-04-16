@@ -143,11 +143,10 @@ Answer:"""
         except Exception as e:
             st.error(f"⚠️ GPT API Error: {e}")
 
-    st.markdown("### 💾 Export Chat History")
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.download_button("🔘 Download as .txt", get_txt_history(), "chat_history.txt", "text/plain")
-
-    with col2:
-        st.download_button("📄 Download as .csv", get_csv_history(), "chat_history.csv", "text/csv")
+    if "chat_history" in st.session_state and st.session_state.chat_history:
+        st.markdown("### 💾 Export Chat History")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button("🔘 Download as .txt", get_txt_history(), "chat_history.txt", "text/plain")
+        with col2:
+            st.download_button("📄 Download as .csv", get_csv_history(), "chat_history.csv", "text/csv")
