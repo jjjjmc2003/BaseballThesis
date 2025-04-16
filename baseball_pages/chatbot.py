@@ -21,8 +21,6 @@ def show():
     # PAGE HEADER
     st.markdown("### 💬 Welcome to the **Baseball Stats Chatbot**")
     st.write("Ask anything about MLB hitters from **1950 to 2010** 📊⚾")
-    st.write("**Note**: To ask about anything non-baseball related or not related to the dataset, prompt it using:\n"
-             "**Outside Knowledge** this will help it respond more accurately.")
 
     # CHAT HISTORY
     if "chat_history" not in st.session_state:
@@ -105,8 +103,8 @@ Answer:"""
             st.rerun()
 
     # CHAT INPUT
+    st.write("Note: questions not on dataset say **Outside Knowledge** in question")
     st.markdown("#### 🔍 Type your question below:")
-    st.caption("Note: questions not on dataset say **Outside Knowledge** in question")
     user_question = st.text_input("", placeholder="e.g. How did home run rates change over time?")
 
     # HANDLE INPUT
