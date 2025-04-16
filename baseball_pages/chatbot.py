@@ -100,6 +100,8 @@ Answer:"""
 
     # Chat input
     st.markdown("#### 🔍 Type your question below:")
+    st.caption('Note: Remember use this prompt for questions you want answers for not based on the dataset of 1950-2010 '
+               'hitters **"using knowledge outside of the dataset"**')
     user_question = st.text_input("", placeholder="e.g. How did home run rates change over time?")
 
     # GPT Response
