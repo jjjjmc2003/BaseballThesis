@@ -123,7 +123,7 @@ Answer:"""
 
             # Decide prompt type
             if "using knowledge outside of the dataset" in user_question.lower():
-                prompt = f"""You are a knowledgeable assistant. Please answer the following question using general knowledge and reasoning beyond any specific dataset:
+                prompt = f"""You are a knowledgeable baseball assistant. Please answer the following question using general knowledge and reasoning beyond any specific dataset:
 
 {user_question}
 
