@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import os
 from openai import OpenAI
+import re
 
 def show():
 
@@ -51,14 +52,28 @@ def show():
     # Prompt Generator
 
     def generate_prompt(question, context_df):
+        # Optional: auto-detect year from question
+
+        year_match = re.findall(r"\b(19[5-9][0-9]|200[0-9]|2010)\b", question)
+        if year_match:
+            year = int(year_match[0])
+            context_df = context_df[context_df["Year"] == year]
+            player_count = context_df["Player"].nunique() if "Player" in context_df.columns else len(context_df)
+            extra_summary = f"\nNOTE: There are {player_count} unique players recorded in the {year} season."
+        else:
+            extra_summary = ""
+
+        # Describe + player count
         stats_summary = context_df.describe(include='all').to_string()
         prompt = f"""You are a baseball analyst bot trained on MLB data from 1950 to 2010. 
-Use the following data summary to answer this question: {question}
+        Use the following data summary to answer this question: {question}
 
-DATA SUMMARY:
-{stats_summary}
+        DATA SUMMARY:
+        {stats_summary}
 
-Answer:"""
+        {extra_summary}
+
+        Answer:"""
 
         return prompt
 
