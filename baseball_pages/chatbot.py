@@ -106,6 +106,7 @@ Answer:"""
 
     # CHAT INPUT
     st.markdown("#### 🔍 Type your question below:")
+    st.caption("Hello")
     user_question = st.text_input("", placeholder="e.g. How did home run rates change over time?")
 
     # HANDLE INPUT
