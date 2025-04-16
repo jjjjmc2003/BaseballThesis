@@ -45,8 +45,12 @@ def show():
         return re.findall(r"\b(19[5-9][0-9]|200[0-9]|2010)\b", q)
 
     def is_broad_question(q):
-        return ("trend" in q.lower() or "change" in q.lower() or "over time" in q.lower() or
-                len(extract_years_from_question(q)) > 1)
+        q_lower = q.lower()
+        keywords = [
+            "trend", "change", "over time", "best year", "which year", "what year", "all time",
+            "best hitters", "most", "top hitters", "power hitting", "compare decades"
+        ]
+        return any(phrase in q_lower for phrase in keywords) or len(extract_years_from_question(q)) > 1
 
     def summarize_by_decade(df):
         summary = ""
