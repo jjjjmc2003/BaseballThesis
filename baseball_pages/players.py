@@ -159,8 +159,8 @@ def show():
         subset = decade_data[decade_data["Hitter Type"] == hitter_type]
         ax.scatter(subset["PC1"], subset["PC2"], color=color, label=hitter_type, alpha=0.6)
 
-    ax.set_xlabel("Principal Component 1 (Power Metrics)")
-    ax.set_ylabel("Principal Component 2 (Contact/Discipline)")
+    ax.set_xlabel("Principal Component 1 (Contact Component)")
+    ax.set_ylabel("Principal Component 2 (Power Component)")
     ax.set_title(f"Hitter Clustering in {selected_decade}")
     ax.legend()
 
