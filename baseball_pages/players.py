@@ -1,174 +1,269 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 import os
 import requests
 import matplotlib.pyplot as plt
-import numpy as np
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
-import seaborn as sns
+from sklearn.preprocessing import MinMaxScaler
+
 
 def show():
     st.title("Players (Power vs Contact)")
 
     st.write("Note on the Player Names: * - bats left-handed, # - bats both (switch hitter),\n nothing - bats right")
 
-    # Set up local data directory
+    # ------------------------------------------------------------------ SET‑UP
     DATA_DIR = "data"
-    os.makedirs(DATA_DIR, exist_ok=True)  # Create the data directory if it doesn't exist
-
-    # GitHub Raw File Path
+    os.makedirs(DATA_DIR, exist_ok=True)
     GITHUB_REPO = "https://raw.githubusercontent.com/jjjjmc2003/BaseballThesis/main/data/"
     decades = ["1950", "1960", "1970", "1980", "1990", "2000", "2010"]
-    files = [f"{decade}stats.csv" for decade in decades]
+    files = [f"{d}stats.csv" for d in decades]
+    YEARLY_CSV = "combined_yearly_stats_all_players.csv"
 
-    # Function to download missing files
-    def download_file(file_name):
-        url = f"{GITHUB_REPO}{file_name}"
-        local_path = os.path.join(DATA_DIR, file_name)
+    def download_file(fname: str):
+        url = f"{GITHUB_REPO}{fname}"
+        dest = os.path.join(DATA_DIR, fname)
+        if not os.path.exists(dest):
+            r = requests.get(url, timeout=15)
+            if r.status_code == 200:
+                with open(dest, "wb") as f:
+                    f.write(r.content)
 
-        if not os.path.exists(local_path):  # Check if file is already downloaded
-            try:
-                response = requests.get(url, stream=True)
-                if response.status_code == 200:
-                    with open(local_path, "wb") as f:
-                        f.write(response.content)
-                    st.success(f"✅ Downloaded: {file_name}")
-                else:
-                    st.error(f"❌ Error downloading {file_name} (HTTP {response.status_code})")
-            except Exception as e:
-                st.error(f"❌ Failed to download {file_name}: {e}")
+    # decade files
+    for f in files:
+        download_file(f)
+    # yearly file
+    download_file(YEARLY_CSV)
 
-    # Download all missing CSVs
-    for file in files:
-        download_file(file)
-
-    # Load Data from Local Files
+    # ---------------------------------------------------------- LOAD DECADE DF
     @st.cache_data
     def load_data():
         data = {}
-        for file in files:
-            file_path = os.path.join(DATA_DIR, file)
-            try:
-                df = pd.read_csv(file_path, encoding="ISO-8859-1")
-                df.columns = df.columns.str.strip()
-                data[file.split("stats")[0]] = df  # Use decade as key
-            except Exception as e:
-                st.error(f"❌ Error loading {file}: {e}")
+        for f in files:
+            df = pd.read_csv(os.path.join(DATA_DIR, f), encoding="ISO-8859-1")
+            df.columns = df.columns.str.strip()
+            data[f.split("stats")[0]] = df
         return data
 
     data = load_data()
 
-    # Process Data for Clustering
-    def process_data(data):
-        key_stats = ["BA", "OBP", "SLG", "HR", "SO", "BB", "PA"]
-        player_data = []
+    # --------------------------------------------------------------- PREP PLAYERS
+    key_stats = ["BA", "OBP", "HR", "SO", "BB", "PA", "SLG", "Player", "AB"]
+    frames = []
+    for decade, df in data.items():
+        if not set(key_stats).issubset(df.columns):
+            continue
+        df = df[key_stats].copy()
+        df.rename(columns={"SO": "K"}, inplace=True)
+        df["HR/PA"] = df["HR"] / df["PA"]
+        df["K%"]    = df["K"]  / df["PA"]
+        df["BB%"]   = df["BB"] / df["PA"]
+        df["ISO"]   = df["SLG"] - df["BA"]
+        df["Decade"] = int(decade)
+        frames.append(df)
 
-        for decade, df in data.items():
-            df.columns = df.columns.str.strip()
-            missing_cols = [col for col in key_stats if col not in df.columns]
-            if missing_cols:
-                st.warning(f"⚠️ Warning: Missing columns in {decade}: {missing_cols}")
-                continue
+    player_df = pd.concat(frames, ignore_index=True)
+    player_df.dropna(subset=["BA", "OBP", "K%", "BB%", "ISO", "HR/PA"], inplace=True)
 
-            df = df[key_stats + ["Player"]].copy()
-            df.rename(columns={"SO": "K"}, inplace=True)
 
-            # **Calculate Key Rate Stats**
-            df["HR/PA"] = df["HR"] / df["PA"]
-            df["K%"] = df["K"] / df["PA"]
-            df["BB%"] = df["BB"] / df["PA"]
-            df["ISO"] = df["SLG"] - df["BA"]  # Isolated Power (ISO)
+    # ---------------------------------------------------------- SCALE SCORES
+    scaler = MinMaxScaler()
+    cols_to_scale = ["BA", "OBP", "K%", "BB%", "ISO", "HR/PA"]
+    player_df[cols_to_scale] = scaler.fit_transform(player_df[cols_to_scale])
+    player_df["K%"] = 1 - player_df["K%"]     # invert K%
 
-            df["Decade"] = int(decade)  # Assign decade for reference
-            player_data.append(df)
+    player_df["ContactScore"] = (
+          0.4 * player_df["BA"]  +
+          0.4 * player_df["OBP"] +
+          0.1 * player_df["BB%"] +
+          0.1 * player_df["K%"]
+    )
+    player_df["PowerScore"] = (
+          0.5 * player_df["ISO"]   +
+          0.5 * player_df["HR/PA"]
+    )
+    # --- global medians for a power veto
+    iso_med = player_df["ISO"].median()
+    hrpa_med = player_df["HR/PA"].median()
 
-        return pd.concat(player_data, ignore_index=True)
+    c75, c50 = player_df["ContactScore"].quantile([.75, .50])
+    p75, p50 = player_df["PowerScore"].quantile([.75, .50])
 
-    player_data = process_data(data)
+    player_df["Hitter Type"] = "Balanced"
 
-    # Ensure only valid numerical columns are used for PCA & Clustering
-    cluster_features = ["BA", "OBP", "SLG", "HR/PA", "K%", "BB%", "ISO"]
-    player_data_cleaned = player_data.dropna(subset=cluster_features)
+    # power specialist
+    player_df.loc[
+        (player_df["PowerScore"] > p75) &
+        (player_df["ContactScore"] <= c50),
+        "Hitter Type"
+    ] = "Power Hitter"
 
-    # **Scale Data for PCA**
-    scaler = StandardScaler()
-    scaled_features = scaler.fit_transform(player_data_cleaned[cluster_features])
+    # contact specialist  ➜ needs high ContactScore *and* mediocre power numbers
+    player_df.loc[
+        (player_df["ContactScore"] > c75) &
+        (player_df["PowerScore"] <= p50) &
+        (player_df["ISO"] <= iso_med) &
+        (player_df["HR/PA"] <= hrpa_med),
+        "Hitter Type"
+    ] = "Contact Hitter"
 
-    # **Perform PCA**
-    pca = PCA(n_components=2)
-    pca_transformed = pca.fit_transform(scaled_features)
-    player_data_cleaned["PC1"] = pca_transformed[:, 0]
-    player_data_cleaned["PC2"] = pca_transformed[:, 1]
+    # ---------------------------------------------------- THRESHOLDS & LABELS
+    c_thresh = player_df["ContactScore"].quantile(0.75)
+    p_thresh = player_df["PowerScore"].quantile(0.75)
 
-    # **Apply Improved Filtering**
-    power_hitters = player_data_cleaned.query("HR/PA > 0.04 or ISO > 0.140")
-    contact_hitters = player_data_cleaned.query("BA >= 0.270 and OBP >= 0.330 and SLG < 0.450")
+    player_df["Hitter Type"] = "Balanced"
+    player_df.loc[player_df["PowerScore"] > p_thresh, "Hitter Type"] = "Power Hitter"
+    player_df.loc[(player_df["ContactScore"] > c_thresh) &
+                  (player_df["PowerScore"] <= p_thresh), "Hitter Type"] = "Contact Hitter"
 
-    player_data_cleaned["Hitter Type"] = "Balanced"
-    player_data_cleaned.loc[power_hitters.index, "Hitter Type"] = "Power Hitter"
-    player_data_cleaned.loc[contact_hitters.index, "Hitter Type"] = "Contact Hitter"
+    # ---------------------------------------------------------------- COMPARE
+    st.subheader("Compare a Power Hitter and a Contact Hitter")
+    power_pool   = player_df[player_df["Hitter Type"] == "Power Hitter"]["Player"].unique()
+    contact_pool = player_df[player_df["Hitter Type"] == "Contact Hitter"]["Player"].unique()
 
-    # **Player vs. Player Comparison**
-    st.subheader("Compare a Power Hitter vs. a Contact Hitter")
-    power_player = st.selectbox("Select a Power Hitter:", power_hitters["Player"].unique())
-    contact_player = st.selectbox("Select a Contact Hitter:", contact_hitters["Player"].unique())
+    # fallback if bucket is empty
+    if power_pool.size == 0:
+        power_pool = player_df.nlargest(10, "PowerScore")["Player"].values
+    if contact_pool.size == 0:
+        contact_pool = player_df.nlargest(10, "ContactScore")["Player"].values
 
-    power_stats = power_hitters[power_hitters["Player"] == power_player].iloc[0]
-    contact_stats = contact_hitters[contact_hitters["Player"] == contact_player].iloc[0]
+    power_pick = st.selectbox("Select Power Hitter", sorted(power_pool))
+    contact_pick = st.selectbox("Select Contact Hitter", sorted(contact_pool))
 
-    comparison_df = pd.DataFrame({
-        "Stat": ["BA", "OBP", "SLG", "HR/PA", "K%", "BB%"],
-        power_player: [power_stats["BA"], power_stats["OBP"], power_stats["SLG"], power_stats["HR/PA"], power_stats["K%"], power_stats["BB%"]],
-        contact_player: [contact_stats["BA"], contact_stats["OBP"], contact_stats["SLG"], contact_stats["HR/PA"], contact_stats["K%"], contact_stats["BB%"]]
+    stats = ["BA", "OBP", "ISO", "HR/PA", "K%", "BB%"]
+    p_stats = player_df[player_df["Player"] == power_pick].iloc[0]
+    c_stats = player_df[player_df["Player"] == contact_pick].iloc[0]
+
+    compare = pd.DataFrame({
+        "Stat": stats,
+        power_pick:  [p_stats[s] for s in stats],
+        contact_pick:[c_stats[s] for s in stats]
     })
+    st.table(compare)
 
-    st.table(comparison_df)
-
-    # **PCA Feature Contribution Plot**
-    def plot_pca_feature_contributions():
-        """Plots the contributions of features to PC1 and PC2."""
-        loadings_df = pd.DataFrame(pca.components_, columns=cluster_features, index=["PC1", "PC2"])
-
-        fig, ax = plt.subplots(figsize=(10, 6))
-        loadings_df.T.plot(kind="bar", ax=ax, width=0.8)
-
-        ax.set_title("PCA Feature Contributions to PC1 and PC2")
-        ax.set_ylabel("Contribution Magnitude")
-        ax.set_xlabel("Hitting Metrics")
-        ax.legend(title="Principal Components")
-        plt.xticks(rotation=45, ha='right')
-
-        # Display explained variance
-        st.write(f"**Explained Variance:** PC1: {pca.explained_variance_ratio_[0] * 100:.2f}%, PC2: {pca.explained_variance_ratio_[1] * 100:.2f}%")
-
-        st.pyplot(fig)
-
-    plot_pca_feature_contributions()
-
-    # **Decade-by-Decade Clustering Study**
-    st.subheader("Hitter Clustering Trends Over Time")
-    selected_decade = st.selectbox("Select a Decade:", decades)
-    decade_data = player_data_cleaned[player_data_cleaned["Decade"] == int(selected_decade)]
-
-    # **Plot Clustering by Decade**
+    # ------------------------------------------------------ GLOBAL SCATTER
+    st.subheader("Contact vs Power Hitter Distribution (1950‑2010)")
     fig, ax = plt.subplots(figsize=(8, 6))
-    colors = {"Power Hitter": "red", "Contact Hitter": "blue", "Balanced": "gray"}
-
-    for hitter_type, color in colors.items():
-        subset = decade_data[decade_data["Hitter Type"] == hitter_type]
-        ax.scatter(subset["PC1"], subset["PC2"], color=color, label=hitter_type, alpha=0.6)
-
-    ax.set_xlabel("Principal Component 1 (Contact Component)")
-    ax.set_ylabel("Principal Component 2 (Power Component)")
-    ax.set_title(f"Hitter Clustering in {selected_decade}")
+    palette = {"Power Hitter":"red","Contact Hitter":"blue","Balanced":"gray"}
+    for lbl, col in palette.items():
+        sub = player_df[player_df["Hitter Type"] == lbl]
+        ax.scatter(sub["ContactScore"], sub["PowerScore"],
+                   c=col, label=lbl, alpha=.6)
+    ax.set_xlabel("Contact Score")
+    ax.set_ylabel("Power Score")
+    ax.set_title("Hitter Classification Based on Statistical Profile")
     ax.legend()
-
     st.pyplot(fig)
 
-    # **Show Example Hitters for Selected Decade**
-    st.write(f"### Example Power Hitters in {selected_decade}:")
-    st.dataframe(decade_data[decade_data["Hitter Type"] == "Power Hitter"].head(10))
+    # ----------------------------------------------------- DECADE DRILL‑DOWN
+    st.subheader("Hitter Breakdown by Decade")
+    selected_decade = st.selectbox("Select a Decade", decades)
+    decade_df = player_df[player_df["Decade"] == int(selected_decade)]
 
-    st.write(f"### Example Contact Hitters in {selected_decade}:")
-    st.dataframe(decade_data[decade_data["Hitter Type"] == "Contact Hitter"].head(10))
+    fig2, ax2 = plt.subplots(figsize=(8, 6))
+    for lbl, col in palette.items():
+        sub = decade_df[decade_df["Hitter Type"] == lbl]
+        ax2.scatter(sub["ContactScore"], sub["PowerScore"],
+                    c=col, label=lbl, alpha=.6)
+    ax2.set_xlabel("Contact Score")
+    ax2.set_ylabel("Power Score")
+    ax2.set_title(f"Hitter Clustering in {selected_decade}")
+    ax2.legend()
+    st.pyplot(fig2)
+
+    st.markdown(f"### Example Power Hitters in {selected_decade}")
+    st.dataframe(decade_df[decade_df["Hitter Type"] == "Power Hitter"].head(10))
+
+    st.markdown(f"### Example Contact Hitters in {selected_decade}")
+    st.dataframe(decade_df[decade_df["Hitter Type"] == "Contact Hitter"].head(10))
+
+    # ----------------------------------------------------- LOAD YEARLY CSV
+    @st.cache_data
+    def load_yearly():
+        fp = os.path.join(DATA_DIR, YEARLY_CSV)
+        if not os.path.exists(fp):
+            return pd.DataFrame()
+        df = pd.read_csv(fp, encoding="ISO-8859-1")
+        df.columns = df.columns.str.strip()
+
+        df["HR/PA"] = df["HR"] / df["PA"]
+        df["K%"]    = df["SO"] / df["AB"]
+        df["BB%"]   = df["BB"] / df["PA"]
+        df["ISO"]   = df["SLG"] - df["BA"]
+
+        scaled = scaler.transform(df[cols_to_scale])
+        scaled = pd.DataFrame(scaled, columns=cols_to_scale, index=df.index)
+        scaled["K%"] = 1 - scaled["K%"]
+        df[cols_to_scale] = scaled
+
+        df["ContactScore"] = (
+              0.4*df["BA"] + 0.4*df["OBP"] + 0.1*df["BB%"] + 0.1*df["K%"]
+        )
+        df["PowerScore"] = (
+              0.5*df["ISO"] + 0.5*df["HR/PA"]
+        )
+        df["Hitter Type"] = "Balanced"
+        df.loc[df["PowerScore"] > p_thresh, "Hitter Type"] = "Power Hitter"
+        df.loc[(df["ContactScore"] > c_thresh) &
+               (df["PowerScore"] <= p_thresh), "Hitter Type"] = "Contact Hitter"
+        return df
+
+    yearly_df = load_yearly()
+
+    # ------------------------------------------------ SEASON SLIDER VIEW
+    if not yearly_df.empty:
+        st.subheader("Season‑by‑Season Contact vs Power (1950‑2010)")
+        season = st.slider("Select season", 1950, 2010, 1950)
+        season_df = yearly_df[yearly_df["Year"] == season]
+
+        fig_season, ax_season = plt.subplots(figsize=(8, 6))
+        for lbl, col in palette.items():
+            sub = season_df[season_df["Hitter Type"] == lbl]
+            ax_season.scatter(sub["ContactScore"], sub["PowerScore"],
+                              c=col, label=lbl, alpha=.6)
+        ax_season.set_xlabel("Contact Score")
+        ax_season.set_ylabel("Power Score")
+        ax_season.set_title(f"Hitter Classification – {season}")
+        ax_season.legend()
+        st.pyplot(fig_season)
+
+        st.markdown(f"### Example Power Hitters – {season}")
+        st.dataframe(season_df[season_df["Hitter Type"] == "Power Hitter"]
+                     .head(10))
+
+        st.markdown(f"### Example Contact Hitters – {season}")
+        st.dataframe(season_df[season_df["Hitter Type"] == "Contact Hitter"]
+                     .head(10))
+
+        # --- quick console dump -------------------------------------------------------
+        # ── Full name lists on‑screen ────────────────────────────────────────────
+    st.subheader("Full Lists of Classified Hitters")
+
+    # pull unique, alphabetised arrays
+    power_names = sorted(player_df.loc[player_df["Hitter Type"] == "Power Hitter",
+    "Player"].unique())
+    contact_names = sorted(player_df.loc[player_df["Hitter Type"] == "Contact Hitter",
+    "Player"].unique())
+
+    # two side‑by‑side columns
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("#### 🔴 Power Hitters")
+        # show as scrollable list
+        st.dataframe(pd.DataFrame({"Power Hitter": power_names}))
+
+    with col2:
+        st.markdown("#### 🔵 Contact Hitters")
+        st.dataframe(pd.DataFrame({"Contact Hitter": contact_names}))
+
+    # ----------------------------------------------------- EXPLANATION
+    st.markdown("""
+### 🧠  How Contact & Power Scores Are Calculated
+*Contact Score* rewards high **BA**, high **OBP**, good plate discipline (**BB %**) and low strike‑outs (**K %**).  
+*Power Score* rewards **ISO** and **HR/PA** in equal measure.
+
+*Top 25 % on one axis* earns the specialist label provided the player is **not** also elite on the other axis.
+
+Everything else = **Balanced**.
+""")
