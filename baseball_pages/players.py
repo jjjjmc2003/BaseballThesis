@@ -118,6 +118,7 @@ def show():
 
     # ---------------------------------------------------------------- COMPARE
     st.subheader("Compare a Power Hitter and a Contact Hitter")
+    player_df["K%"] = 1 - player_df["K%"]
     power_pool   = player_df[player_df["Hitter Type"] == "Power Hitter"]["Player"].unique()
     contact_pool = player_df[player_df["Hitter Type"] == "Contact Hitter"]["Player"].unique()
 
@@ -170,6 +171,7 @@ def show():
     ax2.set_title(f"Hitter Clustering in {selected_decade}")
     ax2.legend()
     st.pyplot(fig2)
+
 
     st.markdown(f"### Example Power Hitters in {selected_decade}")
     st.dataframe(decade_df[decade_df["Hitter Type"] == "Power Hitter"].head(10))
