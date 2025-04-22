@@ -254,7 +254,7 @@ def show():
         # --- Plot with smoothed line ---
         fig5, ax5 = plt.subplots()
         ax5.plot(smoothed_pc1, smoothed_pc2, color='orange', linewidth=2, label='Smoothed Trend Line')
-        ax5.scatter(pc1, pc2, color='gray', s=20, label='Seasons')
+        ax5.scatter(pc1, pc2, color='orange', s=20, label='Seasons')
 
         for i, year in enumerate(years):
             if year % 5 == 0:
