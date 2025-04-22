@@ -224,15 +224,48 @@ def show():
         st.header("Trend Line of Year by Year PCA")
         st.write("Every 5 years labeled")
         fig4, ax4 = plt.subplots()
-        ax4.plot(year_pca_df["PC1"], year_pca_df["PC2"], color='yellow')
-        ax4.scatter(year_pca_df["PC1"], year_pca_df["PC2"], color='gray')
+        ax4.plot(year_pca_df["PC1"], year_pca_df["PC2"], color='yellow', label = 'Trend Line')
+        ax4.scatter(year_pca_df["PC1"], year_pca_df["PC2"], color='gray', label = 'Seasons')
         for year in year_pca_df.index:
             if year % 5 == 0:
                 ax4.annotate(str(year), (year_pca_df.loc[year, "PC1"], year_pca_df.loc[year, "PC2"]), fontsize=10, color="blue")
         ax4.set_xlabel("Principal Component 1 (Contact Component)")
         ax4.set_ylabel("Principal Component 2 (Power Component)")
         ax4.set_title("Trend Line of Yearly Hitting PCA (Contact vs Power)")
+        ax4.legend()
         st.pyplot(fig4)
+
+        # --- Apply smoothing to PC1 and PC2 ---
+        def smooth_series(series, window_size=5):
+            n = len(series)
+            smoothed = np.zeros(n)
+            for i in range(n):
+                indices = list(range(max(0, i - 2), min(n, i + 3)))  # current, 2 before, 2 after
+                smoothed[i] = np.mean([series[j] for j in indices])
+            return smoothed
+
+        years = year_pca_df.index.tolist()
+        pc1 = year_pca_df["PC1"].values
+        pc2 = year_pca_df["PC2"].values
+
+        smoothed_pc1 = smooth_series(pc1)
+        smoothed_pc2 = smooth_series(pc2)
+
+        # --- Plot with smoothed line ---
+        fig5, ax5 = plt.subplots()
+        ax5.plot(smoothed_pc1, smoothed_pc2, color='orange', linewidth=2, label='Smoothed Trend Line')
+        ax5.scatter(pc1, pc2, color='gray', s=20, label='Seasons')
+
+        for i, year in enumerate(years):
+            if year % 5 == 0:
+                ax5.annotate(str(year), (pc1[i], pc2[i]), fontsize=10, color="blue")
+
+        ax5.set_xlabel("Principal Component 1 (Contact Component)")
+        ax5.set_ylabel("Principal Component 2 (Power Component)")
+        ax5.set_title("Smoothed Trend Line of Yearly Hitting PCA (Contact vs Power)")
+        ax5.legend()
+        st.pyplot(fig5)
+
 
         st.markdown("""**Interpretation:**  
         The trajectory line shows a clear directional evolution from high contact/low power years in the 1950s
