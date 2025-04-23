@@ -236,7 +236,7 @@ def show():
         st.pyplot(fig4)
 
         # --- Apply smoothing to PC1 and PC2 ---
-        st.header("\n\nSmoothed Trend Line of Year by Year Hitting PCA (Contact vs Power)")
+        st.header("Smoothed Trend Line of Year by Year Hitting PCA (Contact vs Power)")
         st.write("Only every 5 years shown, projected directly onto the smoothed path")
 
         # --- Define smoothing ---
