@@ -236,14 +236,19 @@ def show():
         st.pyplot(fig4)
 
         # --- Apply smoothing to PC1 and PC2 ---
+        st.header("\n\nSmoothed Trend Line of Year by Year Hitting PCA (Contact vs Power)")
+        st.write("Only every 5 years shown, projected directly onto the smoothed path")
+
+        # --- Define smoothing ---
         def smooth_series(series, window_size=5):
             n = len(series)
             smoothed = np.zeros(n)
             for i in range(n):
-                indices = list(range(max(0, i - 2), min(n, i + 3)))  # current, 2 before, 2 after
+                indices = list(range(max(0, i - 2), min(n, i + 3)))
                 smoothed[i] = np.mean([series[j] for j in indices])
             return smoothed
 
+        # --- Smooth PC1 and PC2 ---
         years = year_pca_df.index.tolist()
         pc1 = year_pca_df["PC1"].values
         pc2 = year_pca_df["PC2"].values
@@ -251,21 +256,30 @@ def show():
         smoothed_pc1 = smooth_series(pc1)
         smoothed_pc2 = smooth_series(pc2)
 
-        # --- Plot with smoothed line ---
-        fig5, ax5 = plt.subplots()
-        ax5.plot(smoothed_pc1, smoothed_pc2, color='orange', linewidth=2, label='Smoothed Trend Line')
-        ax5.scatter(pc1, pc2, color='grey', s=20, label='Seasons')
+        # --- Get positions of every 5th year ---
+        projection_years = [year for year in years if year % 5 == 0]
+        projection_coords = []
 
-        for i, year in enumerate(years):
-            if year % 5 == 0:
-                ax5.annotate(str(year), (pc1[i], pc2[i]), fontsize=10, color="blue")
+        for proj_year in projection_years:
+            i = years.index(proj_year)
+            x = smoothed_pc1[i]
+            y = smoothed_pc2[i]
+            projection_coords.append((x, y, proj_year))
+
+        # --- Plot smoothed line and projections only ---
+        fig5, ax5 = plt.subplots(figsize=(8, 6))
+        ax5.plot(smoothed_pc1, smoothed_pc2, color='orange', linewidth=2, label='Smoothed Trend Line')
+
+        # Label projected years only
+        for x, y, year in projection_coords:
+            ax5.scatter(x, y, color='blue', s=40)
+            ax5.annotate(str(year), (x, y), fontsize=10, color='blue')
 
         ax5.set_xlabel("Principal Component 1 (Contact Component)")
         ax5.set_ylabel("Principal Component 2 (Power Component)")
         ax5.set_title("Smoothed Trend Line of Yearly Hitting PCA (Contact vs Power)")
-        ax5.legend()
+        ax5.legend(["Smoothed Trend Line"])
         st.pyplot(fig5)
-
 
         st.markdown("""**Interpretation:**  
         The trajectory line shows a clear directional evolution from high contact/low power years in the 1950s
