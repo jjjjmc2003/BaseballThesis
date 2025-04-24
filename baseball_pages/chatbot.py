@@ -116,7 +116,7 @@ Answer:"""
     user_question = st.text_input("", placeholder="e.g. How did home run rates change over time?")
 
     # HANDLE INPUT
-    if user_question:
+    if user_question and user_question != st.session_state.get("last_question", ""):
         try:
             client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
@@ -139,6 +139,7 @@ Answer:"""
 
             answer = response.choices[0].message.content
             st.session_state.chat_history.append((user_question, answer))
+            st.session_state["last_question"] = user_question  # <- Prevents re-answering on refresh
 
             # Display
             st.markdown("### 🧠 GPT’s Analysis:")
