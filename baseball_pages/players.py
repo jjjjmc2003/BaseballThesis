@@ -279,11 +279,13 @@ def show():
 
     # Explanation of how scores are calculated
     st.markdown("""
-### 🧠  How Contact & Power Scores Are Calculated
-*Contact Score* rewards high **BA**, high **OBP**, good plate discipline (**BB %**) and low strike‑outs (**K %**).
-*Power Score* rewards **ISO** and **HR/PA** in equal measure.
+### How Contact & Power Scores Are Calculated
+*Contact Score* rewards high **BA**, high **OBP**, good plate discipline (**BB %**) and low strike‑outs (**K %**).
+*Power Score* rewards **ISO** and **HR/PA** in equal measure.
 
-*Top 25 % on one axis* earns the specialist label provided the player is **not** also elite on the other axis.
+*Top 25% on one axis* earns the specialist label provided the player is not also elite on the other axis, in which case they are classified 
+as power. Think Barry Bonds, all time home run leader greatest power hitter of all time, but also a great contact hitter as he walked a lot 
+and had a high batting average. However, since he was so good at both, and being good at power is rare, he is classified as a power hitter.
 
 Everything else = **Balanced**.
 """)
