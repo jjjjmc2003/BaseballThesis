@@ -346,7 +346,7 @@ def show():
                  ' approach once again. Hitters become more data driven, chasing launch angles and '
                  'exit velocity before those terms even entered the mainstream. This transition is '
                  'captured in the yellow trajectory line, a chaotic path from low contact '
-                 'eras to a peak in the 90s-2000s, and a slow decline towards a sole power hitting approach.'
+                 'eras to a peak in the 90s-2000s, and a gradual decline towards a sole power hitting approach.'
                  ' Altogether, the PCA plots, clusters, and trajectory reveal a story that isn’t just about'
                  ' stats. It’s about how rules changed, how training evolved, and how the identity of the'
                  ' hitter transformed. From choking up on the bat to swinging for the fences, MLB offense '
