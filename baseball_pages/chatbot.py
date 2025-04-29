@@ -7,18 +7,36 @@ from openai import OpenAI  # import to use ChatGPT inside our app
 
 
 def show():  # This function runs the whole chatbot app
-    # Add custom styles so our app looks cleaner
-    st.markdown("""
-        <style>
-            .main {background-color: #f8f9fa;}  /* Light background */
-            .stTextInput > div > div > input {
-                background-color: #ffffff;  /* White text input box */
-                border-radius: 8px;  /* Rounded corners */
-                padding: 0.75em;  /* Space inside box */
-                border: 1px solid #ccc;  /* Light gray border */
-            }
-        </style>
-    """, unsafe_allow_html=True)
+
+    theme = st.get_option("theme.base") # Get the current theme light or dark
+
+    # Add custom styles to handle both light and dark modes
+    if theme == "dark":
+        st.markdown("""
+                <style>
+                    .main {background-color: #0e1117;}  /* Dark background */
+                    .stTextInput > div > div > input {
+                        background-color: #262730;  /* Darker text input box */
+                        color: #ffffff;  /* White text */
+                        border-radius: 8px;  /* Rounded corners */
+                        padding: 0.75em;  /* Space inside box */
+                        border: 1px solid #555;  /* Dark gray border */
+                    }
+                </style>
+            """, unsafe_allow_html=True)
+    else: # If light mode is selected
+        st.markdown("""
+                <style>
+                    .main {background-color: #f8f9fa;}  /* Light background */
+                    .stTextInput > div > div > input {
+                        background-color: #ffffff;  /* White text input box */
+                        color: #000000;  /* Black text */
+                        border-radius: 8px;  /* Rounded corners */
+                        padding: 0.75em;  /* Space inside box */
+                        border: 1px solid #ccc;  /* Light gray border */
+                    }
+                </style>
+            """, unsafe_allow_html=True)
 
     # Show the app's title and short description
     st.markdown("### 💬 Welcome to the **Baseball Stats Chatbot**")
