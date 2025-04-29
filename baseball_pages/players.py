@@ -285,7 +285,7 @@ def show():
 
 *Top 25% on one axis* earns the specialist label provided the player is not also elite on the other axis, in which case they are classified 
 as power. Think Barry Bonds, all time home run leader greatest power hitter of all time, but also a great contact hitter as he walked a lot 
-and had a high batting average. However, since he was so good at both, and being good at power is rare, he is classified as a power hitter.
+and had a high batting average. However, since Bonds was so good at both, and being good at power is rare, he is classified as a power hitter.
 
 Everything else = **Balanced**.
 """)
