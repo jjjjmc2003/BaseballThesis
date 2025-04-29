@@ -202,24 +202,49 @@ def show():
         full_with_years["Cluster"] = year_pca_df["Cluster"]
         st.dataframe(full_with_years.groupby("Cluster").mean().style.format("{:.3f}"))
 
+        # Define a range of cluster numbers to test
+        cluster_range = range(1, 11)
+
+        # Store the sum of squared distances (inertia) for each number of clusters
+        inertia = []
+
+        # Perform K-Means clustering for each number of clusters
+        for k in cluster_range:
+            kmeans = KMeans(n_clusters=k, random_state=42)
+            kmeans.fit(year_pca_df[["PC1", "PC2"]])  # Use the PCA-transformed data
+            inertia.append(kmeans.inertia_)
+
+        # Plot the elbow curve
+        # Plot the elbow curve correctly for Streamlit
+        fig_elbow, ax_elbow = plt.subplots(figsize=(8, 5))
+        ax_elbow.plot(cluster_range, inertia, marker='o', linestyle='-')
+        ax_elbow.set_xlabel("Number of Clusters")
+        ax_elbow.set_ylabel("Inertia (Sum of Squared Distances)")
+        ax_elbow.set_title("Elbow Method for Optimal Clusters")
+        ax_elbow.grid(True)
+        st.pyplot(fig_elbow)  # <- this is what was missing
+
         st.markdown("""**Interpretation:**  
         Each cluster groups years with similar hitting profiles. For example, one group may include seasons 
         with high HR/PA and K%, while another favors OBP and low K%. These clusters highlight changing 
-        offensive priorities across eras. Cluster 0 highlights the low parts of contact and power which 
-        means that output productivity in those years are at lows in both power and contact hitting. Signifying
-        low offensive output in those years, also evident from on average that cluster having the worst offensive
-        production in almost every category, except for strikeouts which is not a good thing to lead in. 
-        In Cluster 1, based off the positioning on the PCA and stats driving that location it is a high 
-        contact and average to high power cluster. To no surprise the stats listed above demonstrate that 
-        Cluster 1 is the leader in almost every category making it by far the best all around hitting cluster.
-        Cluster 2 reflects a contact oriented approach, leading statistically in BB% or walk percentage and 
-        having the lowest percentage of strikeouts or K% meaning this group made a lot of contact and walked a 
-        lot identifying them perfectly with contact styled hitting. Cluster 3 demonstrates classic power hitting
-        approaches, average to low contact with high power output. This is backed up both by the positioning on 
-        the PCA but also the stats as they are tied with Cluster 1 in terms of Homeruns per Plate Appearance and 
-        are a close second behind Cluster 0 for highest strikeout rate, demonstrating a low contact approach and 
-        high power approach. Furthermore, demonstrate how the eras changed and how different seasons in this time
-        frame correlate with the other statistically.  
+        offensive priorities across eras. The elbow method used to determine the optimal number of clusters 
+        revealed a distinct "bend" in the curve at k=4, indicating that four clusters provide the best balance
+         between simplicity and explanatory power. Beyond four, the curve flattens, meaning additional clusters offer 
+         minimal improvement. This statistically validates our decision to use four clusters in the PCA analysis. Cluster
+        0 highlights the low parts of contact and power which means that output productivity in those years are at
+        lows in both power and contact hitting. Signifying low offensive output in those years, also evident from
+         on average that cluster having the worst offensive production in almost every category, except for 
+         strikeouts which is not a good thing to lead in. \n\n\n\n\n\n\nIn Cluster 1, based off the positioning on the PCA 
+         and stats driving that location it is a high contact and average to high power cluster. To no surprise the 
+         stats listed above demonstrate that Cluster 1 is the leader in almost every category making it by far the 
+         best all around hitting cluster. Cluster 2 reflects a contact oriented approach, leading statistically in BB% 
+         or walk percentage and having the lowest percentage of strikeouts or K% meaning this group made a lot of 
+         contact and walked a lot identifying them perfectly with contact styled hitting. Cluster 3 demonstrates classic 
+         power hitting approaches, average to low contact with high power output. This is backed up both by the 
+         positioning on the PCA but also the stats as they are tied with Cluster 1 in terms of Homeruns per Plate
+        Appearance and are a close second behind Cluster 0 for highest strikeout rate, demonstrating a low contact
+         approach and high power approach. Furthermore, demonstrate how the eras changed and how different seasons in 
+         this time frame correlate with the other statistically.  
         """)
 
         # Trend Line Through Years
@@ -301,7 +326,7 @@ def show():
                  'far down and to the left of the PCA. This reflects the low contact and low power output. '
                  'This decline isn’t just visual, it’s statistical. Cluster 0, where these seasons '
                  'reside, has the lowest batting average, OBP, and slugging percentage of any group. '
-                 'These were tough years to hit. Then, the 1980s arrive, and we begin to see '
+                 'These were tough years to hit. \n\n\n\n\n\n\nThen, the 1980s arrive, and we begin to see '
                  'a noticeable climb in both power and contact. This was the rise of more complete'
                  ' hitters, players who could do a bit of everything. Offenses had adapted to the '
                  'lowered mound, and lineups became deeper. Cluster 2 picks up many of these years, and'
@@ -313,7 +338,7 @@ def show():
                  'strikeouts. Cluster 3 captures this transformation, moderate contact, high power, and '
                  'very little plate discipline. And at the very peak, you find Cluster 1, which represents'
                  ' the most offensively productive years across the board — high BA, high OBP, high SLG,'
-                 ' and balanced plate discipline. These weren’t just juiced hitters, these were the peak '
+                 ' and balanced plate discipline. \n\n\n\n\n\n\nThese weren’t just juiced hitters, these were the peak '
                  'years of overall output. By the late 2000s, 2010 in the decade plot, the trend line pulls'
                  ' back slightly. Power remains, '
                  'but contact drops, and walks begin to decline again. Stricter PED testing, a new '
