@@ -222,7 +222,7 @@ def show():
         ax_elbow.set_ylabel("Inertia (Sum of Squared Distances)")
         ax_elbow.set_title("Elbow Method for Optimal Clusters")
         ax_elbow.grid(True)
-        st.pyplot(fig_elbow)  # <- this is what was missing
+        st.pyplot(fig_elbow)  # Display the elbow plot in Streamlit
 
         st.markdown("""**Interpretation:**  
         Each cluster groups years with similar hitting profiles. For example, one group may include seasons 
