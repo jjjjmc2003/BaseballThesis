@@ -11,6 +11,8 @@ def show():
         "with a focus on how advances in training, increased pitch velocity, and changes in game philosophy have influenced "
         "hitter roles. Using a combination of **machine learning**, **dimensionality reduction**, and **trend analysis**, "
         "we compare decades of hitting data to examine whether the line between **power hitters** and **contact hitters** has blurred."
+        '\n'
+        "*All Data is sourced from **Baseball Reference** and the Chatbot uses Open AI's **GPT-3.5** model to answer questions about the data."
     )
 
     st.markdown("## Research Goal") #Research Goals
