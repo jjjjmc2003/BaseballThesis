@@ -1,60 +1,63 @@
 def show():
-    import streamlit as st
-    import pandas as pd
-    import numpy as np
-    import os
-    import matplotlib.pyplot as plt
-    from sklearn.decomposition import PCA
-    from sklearn.preprocessing import StandardScaler
-    from sklearn.cluster import KMeans
-    from matplotlib.lines import Line2D
+    # Import necessary libraries inside the function so it only loads when this page is run
+    import streamlit as st # For creating the web app
+    import pandas as pd # For handling data tables
+    import numpy as np  # For numerical operations like smoothing
+    import os  # For checking file paths
+    import matplotlib.pyplot as plt  # For making charts
+    from sklearn.decomposition import PCA  # For running PCA
+    from sklearn.preprocessing import StandardScaler  # For normalizing data
+    from sklearn.cluster import KMeans  # For clustering years into groups
+    from matplotlib.lines import Line2D  # For creating custom legends
 
+    # App title at the top
     st.title("Hitting Evolution (1950–2010)")
 
-    # --- Setup ---
-    DATA_DIR = "data"
+
+    DATA_DIR = "data" # Folder where all data is stored
     decades = ["1950", "1960", "1970", "1980", "1990", "2000", "2010"]
     files = [f"{decade}stats.csv" for decade in decades]
     full_years_file = os.path.join(DATA_DIR, "combined_yearly_stats_all_players.csv")
 
-    # --- Load decade data ---
-    decade_data = {}
+
+    decade_data = {} # Dictionary to store each decade's dataframe
     for file in files:
-        path = os.path.join(DATA_DIR, file)
-        if os.path.exists(path):
-            df = pd.read_csv(path, encoding="ISO-8859-1")
-            df.columns = df.columns.str.strip()
-            decade_data[file[:4]] = df
+        path = os.path.join(DATA_DIR, file) # Create full path
+        if os.path.exists(path):  # Make sure the file exists
+            df = pd.read_csv(path, encoding="ISO-8859-1")  # Read the file
+            df.columns = df.columns.str.strip()  # Remove extra spaces from column names
+            decade_data[file[:4]] = df  # Store in dict using the decade as the key
 
+    # Stats to include in PC
     key_stats = ["BA", "OBP", "SLG", "HR", "SO", "BB", "PA"]
-    decade_avg = {}
+    decade_avg = {} # Will store average stats per decade
     for decade, df in decade_data.items():
-        df = df[key_stats].copy()
-        df.rename(columns={"SO": "K"}, inplace=True)
-        df["HR/PA"] = df["HR"] / df["PA"]
-        df["K%"] = df["K"] / df["PA"]
-        df["BB%"] = df["BB"] / df["PA"]
-        decade_avg[decade] = df.mean()
-    summary_stats_avg = pd.DataFrame(decade_avg).T
+        df = df[key_stats].copy()  # Take only key stats
+        df.rename(columns={"SO": "K"}, inplace=True) # Rename strikeouts to 'K'
+        df["HR/PA"] = df["HR"] / df["PA"]  # Add home runs per plate appearance
+        df["K%"] = df["K"] / df["PA"]  # Add strikeout rate
+        df["BB%"] = df["BB"] / df["PA"]  # Add walk rate
+        decade_avg[decade] = df.mean() # Store the average for each decade
+    summary_stats_avg = pd.DataFrame(decade_avg).T # Turn dict into dataframe
 
-    # --- PCA on decade data ---
-    scaler = StandardScaler()
+    # PCA on decade data
+    scaler = StandardScaler() # Normalize the stats
     pca_features = ["BA", "OBP", "SLG", "HR/PA", "K%", "BB%"]
     scaled = scaler.fit_transform(summary_stats_avg[pca_features])
-    pca = PCA(n_components=2)
-    decade_pca_scores = pca.fit_transform(scaled)
-    decade_pca_df = pd.DataFrame(decade_pca_scores, columns=["PC1", "PC2"], index=summary_stats_avg.index)
+    pca = PCA(n_components=2)  # Reduce to 2D
+    decade_pca_scores = pca.fit_transform(scaled) # Run PCA
+    decade_pca_df = pd.DataFrame(decade_pca_scores, columns=["PC1", "PC2"], index=summary_stats_avg.index)  # Save result
 
     # PCA Decades
-    st.header("Decade-Based PCA of Hitting Trends")
-    fig, ax = plt.subplots()
-    ax.scatter(decade_pca_df["PC1"], decade_pca_df["PC2"], color="blue")
+    st.header("Decade-Based PCA of Hitting Trends")  # Section title
+    fig, ax = plt.subplots()  # Create chart
+    ax.scatter(decade_pca_df["PC1"], decade_pca_df["PC2"], color="blue") # Plot points
     for i, txt in enumerate(decade_pca_df.index):
-        ax.annotate(txt, (decade_pca_df["PC1"][i], decade_pca_df["PC2"][i]))
+        ax.annotate(txt, (decade_pca_df["PC1"][i], decade_pca_df["PC2"][i]))  # Label each point
     ax.set_xlabel("Principal Component 1 (Contact Component)")
     ax.set_ylabel("Principal Component 2 (Power Component)")
     ax.set_title("PCA Analysis of Decade Seasons (Contact vs Power)")
-    st.pyplot(fig)
+    st.pyplot(fig) # Show plot in Streamlit
     st.markdown(f"**Explained Variance:** PC1: {pca.explained_variance_ratio_[0]*100:.2f}%, "
                 f"PC2: {pca.explained_variance_ratio_[1]*100:.2f}%")
 
@@ -73,9 +76,9 @@ def show():
     """)
 
     #PCA Feature Contributions
-    loadings = pd.DataFrame(pca.components_.T, index=pca_features, columns=["PC1", "PC2"])
-    fig_load, ax_load = plt.subplots(figsize=(10, 5))
-    loadings.plot(kind='bar', ax=ax_load)
+    loadings = pd.DataFrame(pca.components_.T, index=pca_features, columns=["PC1", "PC2"]) #get loadings of PCA
+    fig_load, ax_load = plt.subplots(figsize=(10, 5)) #Plot loadings
+    loadings.plot(kind='bar', ax=ax_load) #bar plot
     ax_load.set_title("PCA Feature Contributions to PC1 and PC2")
     ax_load.set_ylabel("Contribution Magnitude")
     ax_load.set_xlabel("Hitting Metrics")
@@ -99,12 +102,13 @@ def show():
         full_df["K%"] = full_df["SO"] / full_df["PA"]
         full_df["BB%"] = full_df["BB"] / full_df["PA"]
 
-        year_grouped = full_df.groupby("Year")[pca_features].mean().dropna()
+        # Average the key stats by year
+        year_grouped = full_df.groupby("Year")[pca_features].mean().dropna() #clean data by dropping na
         projected_scaled = scaler.transform(year_grouped)
         year_scores = pca.transform(projected_scaled)
         year_pca_df = pd.DataFrame(year_scores, columns=["PC1", "PC2"], index=year_grouped.index)
 
-        # Color map
+        # # Define color for each decade
         def get_decade_color(year):
             if 1950 <= year < 1960: return 'black'
             elif 1960 <= year < 1970: return 'blue'
@@ -117,17 +121,17 @@ def show():
 
         # Year-by-Year PCA
         st.header("Year-by-Year Contact vs Power PCA")
-        fig2, ax2 = plt.subplots()
-        for year in year_pca_df.index:
-            color = get_decade_color(year)
-            label_color = 'red' if year % 10 == 0 else 'black'
-            ax2.scatter(year_pca_df.loc[year, "PC1"], year_pca_df.loc[year, "PC2"], color=color)
-            ax2.annotate(str(year), (year_pca_df.loc[year, "PC1"], year_pca_df.loc[year, "PC2"]), fontsize=7, color=label_color)
+        fig2, ax2 = plt.subplots() #plot the plots
+        for year in year_pca_df.index: #look over year_pca dataframe
+            color = get_decade_color(year) #use decade color
+            label_color = 'red' if year % 10 == 0 else 'black' # make label of every beginning of decade (like 1950 or 60) red
+            ax2.scatter(year_pca_df.loc[year, "PC1"], year_pca_df.loc[year, "PC2"], color=color) #make a scatter plot using PC1 and 2
+            ax2.annotate(str(year), (year_pca_df.loc[year, "PC1"], year_pca_df.loc[year, "PC2"]), fontsize=7, color=label_color) #label the year
         ax2.set_xlabel("Principal Component 1 (Contact Component)")
         ax2.set_ylabel("Principal Component 2 (Power Component)")
         ax2.set_title("Yearly PCA of MLB Hitting (Contact vs Power)")
 
-        legend_elements = [
+        legend_elements = [ #legend to understand what each color means
             Line2D([0], [0], marker='o', color='w', label='1950s', markerfacecolor='black'),
             Line2D([0], [0], marker='o', color='w', label='1960s', markerfacecolor='blue'),
             Line2D([0], [0], marker='o', color='w', label='1970s', markerfacecolor='green'),
@@ -158,8 +162,6 @@ def show():
         loadings = pca.components_
         feature_names = pca_features
         loadings_df = pd.DataFrame(loadings.T, columns=["PC1", "PC2"], index=feature_names)
-
-
         fig_weights, ax_weights = plt.subplots(figsize=(10, 6))
         loadings_df.plot(kind='bar', ax=ax_weights)
         ax_weights.set_title("PCA Feature Contributions to PC1 and PC2")
@@ -168,7 +170,7 @@ def show():
         st.pyplot(fig_weights)
         st.dataframe(loadings_df.style.format("{:.2f}"))
 
-        # Write-up for PCA interpretation
+        # Interpretation
         st.markdown(
             "**Interpretation:** As you may have noticed the weights are the same as it is the exact same"
             " PCA just with all the years added to it. I simply included the weights to prove this. Furthermore,"
@@ -178,12 +180,12 @@ def show():
             ' runs per plate appearance, slugging percentage, and striking out while walking is negative. '
             ' These line up nicely with the traits of a power hitter.')
 
-        # --- Clustering ---
-        st.header("Clustered Year by Year PCA")
-        kmeans = KMeans(n_clusters=4, random_state=42)
-        year_pca_df["Cluster"] = kmeans.fit_predict(year_pca_df[["PC1", "PC2"]])
-        fig3, ax3 = plt.subplots()
-        for cluster in sorted(year_pca_df["Cluster"].unique()):
+        # KMeans Clustering
+        st.header("Clustered Year by Year PCA") #title
+        kmeans = KMeans(n_clusters=4, random_state=42) #amount of clusters and the random state
+        year_pca_df["Cluster"] = kmeans.fit_predict(year_pca_df[["PC1", "PC2"]]) #cluster on the year pca
+        fig3, ax3 = plt.subplots() #plot it
+        for cluster in sorted(year_pca_df["Cluster"].unique()): #
             subset = year_pca_df[year_pca_df["Cluster"] == cluster]
             ax3.scatter(subset["PC1"], subset["PC2"], label=f"Cluster {cluster}")
             for year in subset.index:
@@ -194,7 +196,7 @@ def show():
         ax3.legend()
         st.pyplot(fig3)
 
-        # --- Cluster descriptions ---
+        # Cluster descriptions
         st.write("**Cluster Averages:**")
         full_with_years = full_df.groupby("Year")[pca_features].mean().dropna()
         full_with_years["Cluster"] = year_pca_df["Cluster"]
@@ -235,11 +237,11 @@ def show():
         ax4.legend()
         st.pyplot(fig4)
 
-        # --- Apply smoothing to PC1 and PC2 ---
+        # Apply smoothing to PC1 and PC2
         st.header("Smoothed Trend Line of Year by Year Hitting PCA (Contact vs Power)")
         st.write("Only every 5 years shown, projected directly onto the smoothed path")
 
-        # --- Define smoothing ---
+        #  Define smoothing
         def smooth_series(series, window_size=5):
             n = len(series)
             smoothed = np.zeros(n)
@@ -248,7 +250,7 @@ def show():
                 smoothed[i] = np.mean([series[j] for j in indices])
             return smoothed
 
-        # --- Smooth PC1 and PC2 ---
+        # --- Smooth PC1 and PC2
         years = year_pca_df.index.tolist()
         pc1 = year_pca_df["PC1"].values
         pc2 = year_pca_df["PC2"].values
@@ -256,7 +258,7 @@ def show():
         smoothed_pc1 = smooth_series(pc1)
         smoothed_pc2 = smooth_series(pc2)
 
-        # --- Get positions of every 5th year ---
+        # Get positions of every 5th year
         projection_years = [year for year in years if year % 5 == 0]
         projection_coords = []
 
@@ -266,7 +268,7 @@ def show():
             y = smoothed_pc2[i]
             projection_coords.append((x, y, proj_year))
 
-        # --- Plot smoothed line and projections only ---
+        # Plot smoothed line and projections only
         fig5, ax5 = plt.subplots(figsize=(8, 6))
         ax5.plot(smoothed_pc1, smoothed_pc2, color='orange', linewidth=2, label='Smoothed Trend Line')
 

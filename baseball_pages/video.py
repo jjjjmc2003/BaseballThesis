@@ -12,7 +12,7 @@ def show():
         "the other in the slightest "
     )
 
-    # Embed YouTube video
+    # YouTube video
     st.video("https://youtu.be/n8caodd2ZzA?si=70ldPUJfHY7cNaof")
 
     st.write(
