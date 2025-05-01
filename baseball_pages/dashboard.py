@@ -18,7 +18,7 @@ def show():
     st.markdown("## Research Goal") #Research Goals
     st.write(
         "The central aim is to **quantify how hitter profiles and offensive trends have evolved** over time and to determine the "
-        "factors that may have driven those shifts. This includes investigating changes in performance, strategic approaches, and ."
+        "factors that may have driven those shifts. This includes investigating changes in performance, strategic approaches, and overall shifts in game style."
     )
 
 
