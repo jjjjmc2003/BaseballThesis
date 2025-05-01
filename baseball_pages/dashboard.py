@@ -7,7 +7,7 @@ def show():
     # Project overview
     st.markdown("## Project Overview")
     st.write(
-        "This thesis investigates how Major League Baseball (MLB) hitters have changed from **1950 to the present day**, "
+        "This thesis investigates how Major League Baseball (MLB) hitters have changed from **1950 to 2010**, "
         "with a focus on how advances in training, increased pitch velocity, and changes in game philosophy have influenced "
         "hitter roles. Using a combination of **machine learning**, **dimensionality reduction**, and **trend analysis**, "
         "we compare decades of hitting data to examine whether the line between **power hitters** and **contact hitters** has blurred."

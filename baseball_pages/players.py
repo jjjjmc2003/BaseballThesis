@@ -164,7 +164,7 @@ def show():
                    c=col, label=lbl, alpha=.6)
     ax.set_xlabel("Contact Score")
     ax.set_ylabel("Power Score")
-    ax.set_title("Hitter Classification Based on Statistical Profile")
+    ax.set_title("Hitter Classification")
     ax.legend()
     st.pyplot(fig)
 
@@ -180,7 +180,7 @@ def show():
                     c=col, label=lbl, alpha=.6)
     ax2.set_xlabel("Contact Score")
     ax2.set_ylabel("Power Score")
-    ax2.set_title(f"Hitter Clustering in {selected_decade}")
+    ax2.set_title(f"Hitter Classification in {selected_decade}")
     ax2.legend()
     st.pyplot(fig2)
 
