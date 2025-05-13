@@ -27,7 +27,7 @@ if page == "Dashboard":
 
 elif page == "Year by Year TSNE":
     video.show()  # Display the Year-by-Year TSNE visualizations
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Year by Year TSNE",  "timestamp": datetime.datetime.utcnow().isoformat()})
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Year-by-Year TSNE",  "timestamp": datetime.datetime.utcnow().isoformat()})
     requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook-test/387e4a84-07b9-402d-816d-3bae9d689d06",
                   data={"event": "View", "page viewed": "Year by Year TSNE",
                         "timestamp": datetime.datetime.utcnow().isoformat()})
