@@ -23,22 +23,36 @@ page = st.sidebar.radio("Go to", [  # Radio button for page selection
 if page == "Dashboard":
     dashboard.show()  # Display the Dashboard page
     requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data = {"event" : "View", "page viewed" : "Dashboard",  "timestamp": datetime.datetime.utcnow().isoformat()})  # Log the event
+    requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook-test/387e4a84-07b9-402d-816d-3bae9d689d06",data={"event": "View", "page viewed": "Dashboard","timestamp": datetime.datetime.utcnow().isoformat()})  # Log the event
 
 elif page == "Year by Year TSNE":
     video.show()  # Display the Year-by-Year TSNE visualizations
     requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Year by Year TSNE",  "timestamp": datetime.datetime.utcnow().isoformat()})
+    requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook-test/387e4a84-07b9-402d-816d-3bae9d689d06",
+                  data={"event": "View", "page viewed": "Year by Year TSNE",
+                        "timestamp": datetime.datetime.utcnow().isoformat()})
 
 elif page == "Players (Contact vs Power)":
     players.show()  # Display the player comparison page
     requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Players (Contact vs Power)" ,  "timestamp": datetime.datetime.utcnow().isoformat()})
+    requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook-test/387e4a84-07b9-402d-816d-3bae9d689d06",
+                  data={"event": "View", "page viewed": "Players (Contact vs Power)",
+                        "timestamp": datetime.datetime.utcnow().isoformat()})
+
 elif page == "Analysis of Hitting Evolution":
     hitting_evolution.show()  # Display the hitting evolution analysis page
     requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Analysis of Hitting Evolution",  "timestamp": datetime.datetime.utcnow().isoformat()})
+    requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook-test/387e4a84-07b9-402d-816d-3bae9d689d06",
+                  data={"event": "View", "page viewed": "Analysis of Hitting Evolution",
+                        "timestamp": datetime.datetime.utcnow().isoformat()})
 
 elif page == "Decade Hitting Trends Analysis":
     # Title for the Decade Hitting Trends Analysis page
     st.title("Decade Hitting Trends Analysis")
     requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Decade Hitting Trends Analysis",  "timestamp": datetime.datetime.utcnow().isoformat()})
+    requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook-test/387e4a84-07b9-402d-816d-3bae9d689d06",
+                  data={"event": "View", "page viewed": "Decade Hitting Trends Analysis",
+                        "timestamp": datetime.datetime.utcnow().isoformat()})
 
     # Set up the local data directory
     DATA_DIR = "data"  # Directory to store data files
@@ -187,7 +201,13 @@ elif page == "Decade Hitting Trends Analysis":
 elif page == "Chatbot":
     chatbot.show()  # Display the chatbot page
     requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Chatbot",  "timestamp": datetime.datetime.utcnow().isoformat()})
+    requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook-test/387e4a84-07b9-402d-816d-3bae9d689d06",
+                  data={"event": "View", "page viewed": "Chatbot",
+                        "timestamp": datetime.datetime.utcnow().isoformat()})
 
 elif page == "Year by Year Hitting Analysis":
     yearly_analysis.show()  # Display the yearly hitting analysis page
     requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Year by Year Hitting Analysis",  "timestamp": datetime.datetime.utcnow().isoformat()})
+    requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook-test/387e4a84-07b9-402d-816d-3bae9d689d06",
+                  data={"event": "View", "page viewed": "Year by Year Hitting Analysis",
+                        "timestamp": datetime.datetime.utcnow().isoformat()})
