@@ -4,6 +4,7 @@ import pandas as pd  # Pandas for data manipulation
 import os  # OS module for file and directory operations
 import requests  # Requests library for handling HTTP requests
 import matplotlib.pyplot as plt  # Matplotlib for creating visualizations
+import datetime  # Datetime module for handling date and time
 from baseball_pages import dashboard, video, hitting_evolution, players, chatbot, yearly_analysis  # Import custom modules
 
 # Set up the Streamlit sidebar for navigation
@@ -21,23 +22,23 @@ page = st.sidebar.radio("Go to", [  # Radio button for page selection
 # Route to the appropriate page based on user selection
 if page == "Dashboard":
     dashboard.show()  # Display the Dashboard page
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data = {"event" : "View", "page viewed" : "Dashboard"})  # Log the event
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data = {"event" : "View", "page viewed" : "Dashboard",  "timestamp": datetime.datetime.utcnow().isoformat()})  # Log the event
 
 elif page == "Year by Year TSNE":
     video.show()  # Display the Year-by-Year TSNE visualizations
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Year by Year TSNE"})
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Year by Year TSNE",  "timestamp": datetime.datetime.utcnow().isoformat()})
 
 elif page == "Players (Contact vs Power)":
     players.show()  # Display the player comparison page
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Players (Contact vs Power)"})
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Players (Contact vs Power)" ,  "timestamp": datetime.datetime.utcnow().isoformat()})
 elif page == "Analysis of Hitting Evolution":
     hitting_evolution.show()  # Display the hitting evolution analysis page
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Analysis of Hitting Evolution"})
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Analysis of Hitting Evolution",  "timestamp": datetime.datetime.utcnow().isoformat()})
 
 elif page == "Decade Hitting Trends Analysis":
     # Title for the Decade Hitting Trends Analysis page
     st.title("Decade Hitting Trends Analysis")
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Decade Hitting Trends Analysis"})
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Decade Hitting Trends Analysis",  "timestamp": datetime.datetime.utcnow().isoformat()})
 
     # Set up the local data directory
     DATA_DIR = "data"  # Directory to store data files
@@ -185,8 +186,8 @@ elif page == "Decade Hitting Trends Analysis":
 
 elif page == "Chatbot":
     chatbot.show()  # Display the chatbot page
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Chatbot"})
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Chatbot",  "timestamp": datetime.datetime.utcnow().isoformat()})
 
 elif page == "Year by Year Hitting Analysis":
     yearly_analysis.show()  # Display the yearly hitting analysis page
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Year by Year Hitting Analysis"})
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Year by Year Hitting Analysis",  "timestamp": datetime.datetime.utcnow().isoformat()})
