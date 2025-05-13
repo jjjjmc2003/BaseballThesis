@@ -21,19 +21,23 @@ page = st.sidebar.radio("Go to", [  # Radio button for page selection
 # Route to the appropriate page based on user selection
 if page == "Dashboard":
     dashboard.show()  # Display the Dashboard page
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data = {"event" : "Dashboard view"})
 
 elif page == "Year by Year TSNE":
     video.show()  # Display the Year-by-Year TSNE visualizations
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "TSNE view"})
 
 elif page == "Players (Contact vs Power)":
     players.show()  # Display the player comparison page
-
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "Players view"})
 elif page == "Analysis of Hitting Evolution":
     hitting_evolution.show()  # Display the hitting evolution analysis page
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "Hitting Evolution view"})
 
 elif page == "Decade Hitting Trends Analysis":
     # Title for the Decade Hitting Trends Analysis page
     st.title("Decade Hitting Trends Analysis")
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "Decade Hitting view"})
 
     # Set up the local data directory
     DATA_DIR = "data"  # Directory to store data files
@@ -181,6 +185,8 @@ elif page == "Decade Hitting Trends Analysis":
 
 elif page == "Chatbot":
     chatbot.show()  # Display the chatbot page
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "Chatbot view"})
 
 elif page == "Year by Year Hitting Analysis":
     yearly_analysis.show()  # Display the yearly hitting analysis page
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "Year by Year view"})
