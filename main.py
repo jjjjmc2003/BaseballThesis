@@ -35,7 +35,7 @@ if page == "Dashboard":
         st.session_state[log_key] = True
 
 elif page == "Year by Year TSNE":
-    video.show()  # Display the Year-by-Year TSNE visualizations
+    video.show()  # Display the Year by Year TSNE visualizations
     current_page = "Year by Year TSNE"  # Change this depending on which page you're on
     log_key = f"logged_{current_page}"
     if log_key not in st.session_state:
