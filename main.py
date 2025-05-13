@@ -25,7 +25,7 @@ if page == "Dashboard":
 
 elif page == "Year by Year TSNE":
     video.show()  # Display the Year-by-Year TSNE visualizations
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "TSNE view"})
+    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "TSNE-Page view"})
 
 elif page == "Players (Contact vs Power)":
     players.show()  # Display the player comparison page
