@@ -22,37 +22,75 @@ page = st.sidebar.radio("Go to", [  # Radio button for page selection
 # Route to the appropriate page based on user selection
 if page == "Dashboard":
     dashboard.show()  # Display the Dashboard page
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data = {"event" : "View", "page viewed" : "Dashboard",  "timestamp": datetime.datetime.utcnow().isoformat()})  # Log the event
-    requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook/387e4a84-07b9-402d-816d-3bae9d689d06",data={"event": "View", "page viewed": "Dashboard","timestamp": datetime.datetime.utcnow().isoformat()})  # Log the event
+    current_page = "Dashboard"  # Change this depending on which page you're on
+    log_key = f"logged_{current_page}"
+    if log_key not in st.session_state:
+        # Log the event for analytics
+        requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/",
+                      data={"event": "View", "page viewed": "Dashboard",
+                            "timestamp": datetime.datetime.utcnow().isoformat()})  # Log the event
+        requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook/387e4a84-07b9-402d-816d-3bae9d689d06",
+                      data={"event": "View", "page viewed": "Dashboard",
+                            "timestamp": datetime.datetime.utcnow().isoformat()})  # Log the event
+        st.session_state[log_key] = True
 
 elif page == "Year by Year TSNE":
     video.show()  # Display the Year-by-Year TSNE visualizations
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Year-by-Year TSNE",  "timestamp": datetime.datetime.utcnow().isoformat()})
-    requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook/387e4a84-07b9-402d-816d-3bae9d689d06",
-                  data={"event": "View", "page viewed": "Year by Year TSNE",
-                        "timestamp": datetime.datetime.utcnow().isoformat()})
+    current_page = "Year by Year TSNE"  # Change this depending on which page you're on
+    log_key = f"logged_{current_page}"
+    if log_key not in st.session_state:
+        requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/",
+                      data={"event": "view", "page viewed": "Year-by-Year TSNE",
+                            "timestamp": datetime.datetime.utcnow().isoformat()})
+        requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook/387e4a84-07b9-402d-816d-3bae9d689d06",
+                      data={"event": "View", "page viewed": "Year by Year TSNE",
+                            "timestamp": datetime.datetime.utcnow().isoformat()})
+        st.session_state[log_key] = True
+
+
 
 elif page == "Players (Contact vs Power)":
     players.show()  # Display the player comparison page
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Players (Contact vs Power)" ,  "timestamp": datetime.datetime.utcnow().isoformat()})
-    requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook/387e4a84-07b9-402d-816d-3bae9d689d06",
-                  data={"event": "View", "page viewed": "Players (Contact vs Power)",
-                        "timestamp": datetime.datetime.utcnow().isoformat()})
+    current_page = "Players (Contact vs Power)"  # Change this depending on which page you're on
+    log_key = f"logged_{current_page}"
+    if log_key not in st.session_state:
+        # Log the event for analytics
+        requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/",
+                      data={"event": "view", "page viewed": "Players (Contact vs Power)",
+                            "timestamp": datetime.datetime.utcnow().isoformat()})
+        requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook/387e4a84-07b9-402d-816d-3bae9d689d06",
+                      data={"event": "View", "page viewed": "Players (Contact vs Power)",
+                            "timestamp": datetime.datetime.utcnow().isoformat()})
+        st.session_state[log_key] = True
+
 
 elif page == "Analysis of Hitting Evolution":
     hitting_evolution.show()  # Display the hitting evolution analysis page
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Analysis of Hitting Evolution",  "timestamp": datetime.datetime.utcnow().isoformat()})
-    requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook/387e4a84-07b9-402d-816d-3bae9d689d06",
-                  data={"event": "View", "page viewed": "Analysis of Hitting Evolution",
-                        "timestamp": datetime.datetime.utcnow().isoformat()})
+    current_page = "Analysis of Hitting Evolution"  # Change this depending on which page you're on
+    log_key = f"logged_{current_page}"
+    if log_key not in st.session_state:
+        requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/",
+                      data={"event": "view", "page viewed": "Analysis of Hitting Evolution",
+                            "timestamp": datetime.datetime.utcnow().isoformat()})
+        requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook/387e4a84-07b9-402d-816d-3bae9d689d06",
+                      data={"event": "View", "page viewed": "Analysis of Hitting Evolution",
+                            "timestamp": datetime.datetime.utcnow().isoformat()})
+        # Log the event for analytics
+        st.session_state[log_key] = True
+
 
 elif page == "Decade Hitting Trends Analysis":
     # Title for the Decade Hitting Trends Analysis page
     st.title("Decade Hitting Trends Analysis")
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Decade Hitting Trends Analysis",  "timestamp": datetime.datetime.utcnow().isoformat()})
-    requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook/387e4a84-07b9-402d-816d-3bae9d689d06",
-                  data={"event": "View", "page viewed": "Decade Hitting Trends Analysis",
-                        "timestamp": datetime.datetime.utcnow().isoformat()})
+    current_page = "Decade Hitting Trends Analysis"
+    log_key = f"logged_{current_page}"
+    if log_key not in st.session_state:
+        # Log the event for analytics
+        requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Decade Hitting Trends Analysis",  "timestamp": datetime.datetime.utcnow().isoformat()})
+        requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook/387e4a84-07b9-402d-816d-3bae9d689d06",
+                      data={"event": "View", "page viewed": "Decade Hitting Trends Analysis",
+                            "timestamp": datetime.datetime.utcnow().isoformat()})
+        st.session_state[log_key] = True
 
     # Set up the local data directory
     DATA_DIR = "data"  # Directory to store data files
@@ -200,14 +238,22 @@ elif page == "Decade Hitting Trends Analysis":
 
 elif page == "Chatbot":
     chatbot.show()  # Display the chatbot page
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Chatbot",  "timestamp": datetime.datetime.utcnow().isoformat()})
-    requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook/387e4a84-07b9-402d-816d-3bae9d689d06",
-                  data={"event": "View", "page viewed": "Chatbot",
-                        "timestamp": datetime.datetime.utcnow().isoformat()})
+    current_page = "Chatbot"  # Change this depending on which page you're on
+    log_key = f"logged_{current_page}"
+    if log_key not in st.session_state:
+        requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Chatbot",  "timestamp": datetime.datetime.utcnow().isoformat()})
+        requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook/387e4a84-07b9-402d-816d-3bae9d689d06",
+                      data={"event": "View", "page viewed": "Chatbot",
+                            "timestamp": datetime.datetime.utcnow().isoformat()})
+        st.session_state[log_key] = True;
 
 elif page == "Year by Year Hitting Analysis":
     yearly_analysis.show()  # Display the yearly hitting analysis page
-    requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Year by Year Hitting Analysis",  "timestamp": datetime.datetime.utcnow().isoformat()})
-    requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook/387e4a84-07b9-402d-816d-3bae9d689d06",
-                  data={"event": "View", "page viewed": "Year by Year Hitting Analysis",
-                        "timestamp": datetime.datetime.utcnow().isoformat()})
+    current_page = "Year by Year Hitting Analysis"  # Change this depending on which page you're on
+    log_key = f"logged_{current_page}"
+    if log_key not in st.session_state:
+        requests.post("https://hooks.zapier.com/hooks/catch/22833993/2nj036y/", data={"event": "view", "page viewed": "Year by Year Hitting Analysis",  "timestamp": datetime.datetime.utcnow().isoformat()})
+        requests.post("https://john-mcintosh-practice.app.n8n.cloud/webhook/387e4a84-07b9-402d-816d-3bae9d689d06",
+                      data={"event": "View", "page viewed": "Year by Year Hitting Analysis",
+                            "timestamp": datetime.datetime.utcnow().isoformat()})
+        st.session_state[log_key] = True;
